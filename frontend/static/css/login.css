@@ -1,0 +1,76 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-image: url('/static/assent/img/fondoo.jpg'); /* Asegúrate de que la ruta de la imagen sea correcta */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #fff; /* Este color es de respaldo en caso de que la imagen no se cargue */
+}
+
+.formulario {
+    width: 350px;
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.8); /* Fondo semi-transparente para resaltar el formulario */
+    color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2); /* Sombra más sutil y difusa */
+    backdrop-filter: blur(5px); /* Añade un poco de desenfoque al fondo del formulario */
+    text-align: center;
+}
+
+.formulario h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #f0f0f0;
+}
+
+.formulario label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 14px;
+    opacity: 0.8;
+    text-align: left; /* Ajustar la alineación a la izquierda */
+}
+
+.formulario input[type=text],
+.formulario input[type=email],
+.formulario input[type=password],
+.formulario input[type=submit] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.formulario input[type=submit] {
+    background-color: #28a745; /* Color de fondo verde */
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: bold; /* Texto en negrita */
+}
+
+.formulario input[type=submit]:hover {
+    background-color: #218838; /* Color de fondo más oscuro al hacer hover */
+}
+
+.iniciarSesion {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.iniciarSesion a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold; /* Texto en negrita */
+}
+
+.iniciarSesion a:hover {
+    text-decoration: underline;
+}
