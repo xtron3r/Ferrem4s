@@ -1,0 +1,632 @@
+:root {
+  --primary: rgba(255, 255, 255, 0.850);
+  --secondary: rgba(255, 255, 255, 0.850);
+  --light: white;
+  --grey: #efefef;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Open Sans", sans-serif;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: black;
+  font-family: "Roboto", sans-serif;
+  color: white;
+  height: 90vh;
+  background-position: center top;
+  background-image: url('/static/assets/img/bg3.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+
+
+h1 {
+  color: white;
+  text-shadow: 1px 1px 2px black;
+}
+
+.registro-container h1{
+  color: black;
+  text-align: center;
+}
+
+.registro-container label{
+  color: black;
+}
+
+header {
+  width: 100%;
+  height: 112.5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 15%;
+  background: rgba(0, 0, 0, 0);
+}
+
+.logo {
+  width: 225px;
+  height: 168.75px;
+  cursor: pointer;
+  background-image: url('/static/assets/img/logo2.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.nav-bar ul {
+  display: flex;
+  list-style: none;
+}
+
+.nav-bar li {
+  margin-right: 22.5px;
+}
+
+.navbar-icons {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-link {
+  margin-left: 25px;
+  color: white;
+  text-decoration: none;
+  font-size: 24px;
+}
+
+.navbar-link:hover {
+  color: rgb(255, 255, 255);
+  transition: all 0.4s ease 0s;
+}
+
+nav li a {
+  font-size: 24px;
+  font-weight: 500;
+  color: white;
+  text-decoration: none;
+  position: relative;
+}
+
+nav li a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 2px;
+  background-color: rgb(255, 255, 255);
+}
+
+#infotxt {
+  background-color: var(--primary);
+  color: aliceblue;
+  margin-left: 100px;
+}
+
+#loginbox {
+  background-color: rgb(65, 18, 18, 1);
+}
+
+#logincontent {
+  max-width: 450px !important;
+}
+
+@media screen and (max-width: 992px) {
+  #infotxt {
+    background-color: rgb(65, 18, 18, 1);
+    }
+
+  #loginbox h2 {
+    color: rgb(255, 255, 255);
+  }
+
+  #loginbox {
+    background-color: rgb(65, 18, 18, 1);
+    }
+
+  #reviewbk {
+    font-size: 1.5rem;
+  }
+  #loginbox {
+    background-color: rgb(65, 18, 18, 1);    
+  }
+
+
+  #logo-fluid {
+    content: url('/static/assets/img/logo2.png');
+  }
+
+}
+
+
+@media screen and (max-width: 1200px) {
+  #loginbox {
+    margin-left: 0vh;
+    margin-right: 0h;
+  }
+
+}
+
+.tittlebk {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  margin: 2rem;
+}
+
+.autorbk {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  margin: 2rem;
+}
+
+.reviewbk {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  text-align: left;
+  margin: 2rem;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+#downloadbtn .col {
+  font-family: "Inter", sans-serif;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 100px;
+}
+
+.column {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+}
+
+.column img {
+  max-width: 100%;
+  width: 650px;
+  height: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.column span {
+  font-size: 40px;
+}
+
+.button-container {
+  margin-top: 20px;
+}
+
+.button-container button {
+  font-size: 15px;
+  padding: 10px 25px;
+  background-color: rgb(200, 0, 0);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.button-container button:hover {
+  background-color: rgb(150, 0, 0);
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .column {
+    padding: 10px;
+  }
+
+  .column img {
+    margin-bottom: 10px;
+  }
+}
+
+#search-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 70px;
+  margin-bottom: 50px;
+}
+
+#search-form label,
+#search-form input,
+#search-form button {
+  margin-right: 10px;
+}
+
+#barra-busqueda {
+  width: 100%;
+  max-width: 500px;
+  padding: 10px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#search-form button {
+  padding: 10px 20px;
+  font-size: 15px;
+  background-color: #23d45e;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#search-form button:hover {
+  background-color: #136d31;
+}
+
+footer {
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.catalog-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 25px;
+}
+
+.row-cat {
+  flex: 0 1 calc(33.33% - 20px);
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 25px;
+  width: calc(33.33% - 40px);
+  display: flex;
+  justify-content: space-between;
+}
+
+.row-cat > div {
+  width: 30%;
+}
+
+.row-cat img {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  display: block;
+}
+
+.red-transparent-background {
+  background-color: var(--primary);
+  padding: 45px;
+  padding-top: 70px;
+  border-radius: 41px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  width: 623px;
+}
+
+.red-transparent-background h1 {
+  font-family: "Roboto", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+}
+
+.log-column {
+  flex: 0 0 auto; /* Esto evita que la columna se expanda */
+}
+
+.registro-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+}
+
+.reg-column {
+  flex: 0 0 auto; /* Esto evita que la columna se expanda */
+}
+
+#loginbtn {
+  background-color: rgba(73, 113, 54, 1);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  box-shadow: rgba(0, 0, 0, 0.25);
+}
+
+#loginbox {
+  background-color: var(--primary);
+  padding-top: 70px;
+  border-top-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  text-align: center;
+}
+
+#loginbox h2 {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.form-create-libro{
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+input {
+  display: block;
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+input[type="submit"] {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: rgba(73, 113, 54, 1);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  box-shadow: rgba(0, 0, 0, 0.25);
+}
+
+input[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+#logo-fluid {
+  max-width: 100% !important;
+  height: auto;
+}
+
+.image-container {
+  column-count: 4; /* Número de columnas */
+  column-gap: 20px; /* Espacio entre columnas */
+  margin: 0 auto; /* Centrar horizontalmente */
+  max-width: 800px; /* Ancho máximo del contenedor */
+}
+
+.image-container img {
+  width: 100%; /* Asegura que las imágenes se ajusten al ancho de las columnas */
+  margin-bottom: 20px; /* Espacio entre imágenes */
+}
+
+@media screen and (max-width: 992px) {
+  .image-container {
+    column-count: 3;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .image-container {
+    column-count: 2;
+    max-width: 60vh;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .image-container {
+    column-count: 1;
+    max-width: 40vh;
+  }
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 250px;
+  padding-top: 3rem;
+  background-color: var(--primary);
+  color: #fff;
+}
+.sidebar-item {
+  padding: 0.5rem 1rem;
+}
+.sidebar-item:hover {
+  background-color: #524e4e;
+}
+.sidebar-item.active {
+  background-color: black;
+}
+
+.content {
+  background-color: var(--grey);
+  border-radius: 5px;
+}
+
+#usetlist {
+  background-color: var(--grey);
+  border-radius: 5px;
+}
+
+@media screen and (max-width: 992px) {
+  .sidebar {
+    display: none;
+  }
+}
+
+.edit-mode {
+  color: rgb(40, 12, 199); /* Cambiar el fondo del cuadro de texto a blanco */
+}
+
+.box-element{
+	box-shadow:hsl(0, 0%, 80%) 0 0 16px;
+	background-color: #fff;
+	border-radius: 4px;
+	padding: 10px;
+}
+
+.thumbnail{
+	width: 100%;
+	height: 200px;
+	-webkit-box-shadow: -1px -3px 5px -2px rgba(214,214,214,1);
+    -moz-box-shadow: -1px -3px 5px -2px rgba(214,214,214,1);
+    box-shadow: -1px -3px 5px -2px rgba(214,214,214,1);
+}
+
+.img-thumbnail {
+  margin-top: -100px;
+  width: 150px; 
+  height: auto; 
+}
+
+.product{
+	border-radius: 0 0 4px 4px;
+}
+
+.bg-dark{
+	background-color: #4f868c!important;
+}
+
+#cart-icon{
+	width:25px;
+	display: inline-block;
+	margin-left: 15px;
+}
+
+.nav-item {
+  position: relative;
+}
+
+#cart-total {
+  position: absolute;
+  bottom: 12px; 
+  left: -2px; 
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 4px; 
+  font-size: 0.7rem; 
+  z-index: 1;
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+}
+
+.col-lg-4, .col-lg-6, .col-lg-8, .col-lg-12{
+	margin-top: 10px;
+}
+
+.btn{
+	border-radius: 0;
+}
+
+.row-image{
+	width: 100px;
+}
+
+.form-field{
+	width:250px;
+	display: inline-block;
+	padding: 5px;
+}
+
+.cart-row{
+	display: flex;
+    align-items: flex-stretch;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ececec;
+
+}
+
+.quantity{
+	display: inline-block;
+	font-weight: 700;
+	padding-right:10px;
+	
+
+}
+
+.chg-quantity{
+	width: 12px;
+	cursor: pointer;
+	display: block;
+	margin-top: 5px;
+	transition:.1s;
+}
+
+.chg-quantity:hover{
+	opacity: .6;
+}
+
+
+.hidden{
+	display: none;
+}
+
+#form-button {
+  width: 615px;
+  background-color: rgb(0, 129, 86);
+  color: white; /* Asegúrate de que el texto sea visible */
+}
+
+#form-button:hover {
+  background-color: rgb(0, 70, 46); /* Cambia el color de fondo cuando el cursor está sobre el botón */
+  color: white; /* Puedes cambiar el color del texto si lo deseas */
+  cursor: pointer; /* Cambia el cursor para indicar que el botón es interactivo */
+}
+
+#download-button {
+  width: 100px;
+  background-color: rgb(0, 129, 86);
+  color: white; /* Asegúrate de que el texto sea visible */
+  font-style: bold;
+  margin-left: 500px;
+}
+
+#download-button:hover {
+  background-color: rgb(0, 70, 46); /* Cambia el color de fondo cuando el cursor está sobre el botón */
+  color: white; /* Puedes cambiar el color del texto si lo deseas */
+  cursor: pointer; /* Cambia el cursor para indicar que el botón es interactivo */
+}
+
+/* Estilo para el formulario de recuperación de contraseña */
+#loginbox {
+  background-color: rgb(65, 18, 18, 0.8);
+  color: black; /* Cambiar el color del texto en el formulario */
+  padding: 20px; /* Agregar espaciado interno al formulario */
+  border-radius: 10px; /* Agregar bordes redondeados al formulario */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Agregar sombra al formulario */
+}
+

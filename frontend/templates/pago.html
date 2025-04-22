@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Pago</title>
+    <!-- Enlace a Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">   
+    <style>
+        .invalid-feedback {
+            display: none;
+        }
+        .is-invalid + .invalid-feedback {
+            display: block;
+            color: red;
+        }
+        .is-invalid {
+            border-color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Formulario de Pago</h2>
+        <form>
+            <div class="mb-3">
+                <label for="cardNumber" class="form-label">Número de Tarjeta:</label>
+                <input type="text" class="form-control" id="cardNumber" name="cardNumber" placeholder="Ingrese el número de tarjeta" required pattern="[0-9]{16}" maxlength="16">
+                <div class="invalid-feedback">El número de tarjeta es inválido. Debe contener 16 dígitos numéricos.</div>
+            </div>
+            <div class="mb-3">
+                <label for="expirationMonth" class="form-label">Fecha de Vencimiento:</label>
+                <div class="row">
+                    <div class="col">
+                        <select class="form-select" id="expirationMonth" name="expirationMonth" required>
+                            <option value="">Mes</option>
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="01">04</option>
+                            <option value="02">05</option>
+                            <option value="03">06</option>
+                            <option value="01">07</option>
+                            <option value="02">08</option>
+                            <option value="03">09</option>
+                            <option value="01">10</option>
+                            <option value="02">11</option>
+                            <option value="03">12</option>
+                            <!-- Agrega el resto de los meses aquí -->
+                        </select>
+                    </div>
+                    <div class="col">
+                        <select class="form-select" id="expirationYear" name="expirationYear" required>
+                            <option value="">Año</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2024">2027</option>
+                            <option value="2025">2028</option>
+                            <option value="2026">2029</option>
+                            <option value="2026">2030</option>
+                            <!-- Agrega el resto de los años aquí -->
+                        </select>
+                        <div class="invalid-feedback">Por favor seleccione un año válido.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="cvv" class="form-label">CVV:</label>
+                <input type="text" class="form-control" id="cvv" name="cvv" placeholder="Ingrese el CVV" required pattern="[0-9]{3}" maxlength="3">
+                <div class="invalid-feedback">El CVV es inválido. Debe contener 3 dígitos numéricos.</div>
+            </div>
+            <div class="mb-3">
+                <label for="cardHolderName" class="form-label">Nombre del Titular:</label>
+                <input type="text" class="form-control" id="cardHolderName" name="cardHolderName" placeholder="Ingrese el nombre del titular" required>
+                <div class="invalid-feedback">El nombre del titular es requerido.</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Pagar</button>
+        </form>
+    </div>
+
+    <!-- Enlace a jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Enlace a Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('form input, form select').on('input change', function() {
+                var isValid = true;
+                var $input = $(this);
+                if ($input.prop('required') && !$input.val()) {
+                    isValid = false;
+                }
+                if ($input.attr('pattern') && $input.val() && !RegExp($input.attr('pattern')).test($input.val())) {
+                    isValid = false;
+                }
+                if (isValid) {
+                    $input.removeClass('is-invalid').addClass('is-valid');
+                    $input.next('.invalid-feedback').hide();
+                } else {
+                    $input.removeClass('is-valid').addClass('is-invalid');
+                    $input.next('.invalid-feedback').show();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

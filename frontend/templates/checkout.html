@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>BiblioWeb</title>
+    <!-- CSS -->
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">   
+    <!-- favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <!-- Font Awesome (Icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body style="background-color: rgb(0, 0, 0);">
+    
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+                {% if user.is_superuser %}
+                <ul style="margin-right: -250px; margin-left: 50px;" class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold fs-4" href="{% url 'administracion' %}">Administración</a>
+                    </li>
+                </ul>
+                {% elif user.is_authenticated %}
+                <ul style="margin-right: -250px; margin-left: 50px;" class="navbar-nav">
+                    <li class="nav-item">
+                        <span class="navbar-text fw-bold fs-4"><i class="fas fa-user user-icon"></i> {{ user.username }}</span>
+                    </li>
+                </ul>
+                {% endif %}
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold fs-4" aria-current="page" href="{% url 'home_page' %}">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold fs-4" href="{% url 'catalogue' %}">Catálogo</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li style="margin-left: 10px;" class="nav-item position-relative">
+                        <a class="nav-link fw-bold fs-4 position-relative" href="{% url 'cart' %}">
+                            <p id="cart-total" class="position-absolute top-2 start-1 translate-middle badge rounded-pill bg-danger">{{cartItems}}</p>
+                            <i class="fas fa-shopping-cart cart-icon"></i> Carrito de Compra
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold fs-4" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold fs-4" href="{% url 'contact' %}">Contacto</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold fs-4" href="{% url 'signin' %}">Iniciar Sesión</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Content -->
+    <div class="container-md" id="infobook" style="margin-top: 50px;">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="box-element" id="form-wrapper">
+                    <form id="form">
+                        <div id="user-info">
+                            <br>
+                            <h3>Contacto:</h3>
+                            <hr>
+                            <div class="form-field">
+                                <input required class="form-control" type="number" name="telefono" placeholder="Telefono..">
+                            </div>
+                        </div>
+
+                        <div id="shipping-info">
+                            <br>
+                            <h3>Envio:</h3>
+                            <hr>
+                            <div class="form-field">
+                                <input class="form-control" type="text" name="pais" placeholder="Pais..">
+                            </div>
+                            <div class="form-field">
+                                <input class="form-control" type="text" name="ciudad" placeholder="Ciudad..">
+                            </div>
+                            <div class="form-field">
+                                <input class="form-control" type="text" name="comuna" placeholder="Comuna..">
+                            </div>
+                            <div class="form-field">
+                                <input class="form-control" type="text" name="direccion" placeholder="Direccion..">
+                            </div>
+                            <div class="form-field">
+                                <input class="form-control" type="text" name="zipcode" placeholder="Zip code..">
+                            </div>
+                        </div>
+
+                        <div id="payment-info">
+                            <br>
+                            <h3>Tarjeta:</h3>
+                            <hr>
+                            <div class="form-field">
+                                <input class="form-control" type="number" name="numeroTarjeta" placeholder="Numero Tarjeta..">
+                            </div>
+                            <div class="form-field">
+                                <input class="form-control" type="text" name="nombreTitular" placeholder="Nombre Titular..">
+                            </div>
+                            <div class="form-field">
+                                <input class="form-control" type="text" name="fechaCaducidad" placeholder="Año/Mes">
+                            </div>
+                            <div class="form-field">
+                                <input class="form-control" type="number" name="codigoCvc" placeholder="Codigo CVC..">
+                            </div>
+                        </div>
+                    </form>
+                    
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-4">
+                            <img src="{% static 'assets/img/shoppay.png' %}" alt="" class="img-thumbnail">
+                        </div>
+                        <div class="col-4">
+                            <img src="{% static 'assets/img/amazonpay.png' %}" alt="" class="img-thumbnail">
+                        </div>
+                        <div class="col-4">
+                            <img src="{% static 'assets/img/paypal.png' %}" alt="" class="img-thumbnail">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="box-element">
+                    <br>
+                    <h3>Resumen del pedido:</h3>
+                    <hr>
+                    {% for item in items %}
+                    <div class="cart-row">
+                        <div style="flex:2"><img style="max-width: 100px; max-height: 150px; width: 100px; height: 150px;" class="row-image" src="{{ item.libro.portadaLibro.url }}" alt=""></div>
+                        <div style="flex:4">
+                            <p>{{item.libro.tituloLibro}}</p>
+                            {% if item.libro.archivoLibro %}
+                                <div style="flex:1; margin-top: 80px; margin-left: 0px;">
+                                    <a href="{{item.libro.archivoLibro.url}}" download>
+                                        <button id="dowmload-button" class="btn btn-success">Descargar</button>
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div style="flex:1"><p>${{item.libro.precioLibro|floatformat:2}}</p></div>
+                        <div style="flex:1"><p>x{{item.quantity}}</p></div>
+                    </div>
+                    {% endfor %}
+                    <h5>Items: x{{order.get_cart_items}}</h5>
+                    <h5>Total: ${{order.get_cart_total|floatformat:2}}</h5>
+                    <input id="form-button" class="btn btn-success" type="submit" value="Pagar">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div>
+            <div>
+                <div>Copyright &copy; BiblioWeb 2024</div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'javascript/checkout.js' %}"></script>
+    <script>
+        var shipping = '{{ order.shipping }}';
+
+        if (shipping === 'False') {
+            document.getElementById('shipping-info').innerHTML = '';
+            document.getElementById('payment-info').innerHTML = '';
+            document.getElementById('form-button').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
