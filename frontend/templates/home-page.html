@@ -1,112 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% load static %}
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>BiblioWeb</title>
-    <!-- CSS -->
-    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">   
-    <!-- favicon -->
-    <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-    <!-- Font Awesome (Icons) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zapatillas San Antonio</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="../static/css/style-footer" />
+  <link rel="stylesheet" href="../static/css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+  <link rel="icon" href="assent/img/logo pagina.png">
 </head>
+<body>
 
-<body style="background-color: black;">
-    
-    <!-- Header -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#"></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
-                {% if user.is_superuser %}
-                <ul style="margin-right: -250px; margin-left: 50px;" class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold fs-4" href="{% url 'administracion' %}">Administración</a>
-                    </li>
-                </ul>
-                {% elif user.is_authenticated %}
-                <ul style="margin-right: -250px; margin-left: 50px;" class="navbar-nav">
-                    <li class="nav-item">
-                        <span class="navbar-text fw-bold fs-4"><i class="fas fa-user user-icon"></i> {{ user.username }}</span>
-                    </li>
-                </ul>
-                {% endif %}
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active fw-bold fs-4" aria-current="page" href="{% url 'home_page' %}">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold fs-4" href="{% url 'catalogue' %}">Catálogo</a>
-                    </li>
-                    {% if user.is_authenticated %}
-                    <li style="margin-left: 10px;" class="nav-item position-relative">
-                        <a class="nav-link fw-bold fs-4 position-relative" href="{% url 'cart' %}">
-                            <p id="cart-total" class="position-absolute top-2 start-1 translate-middle badge rounded-pill bg-danger">{{cartItems}}</p>
-                            <i class="fas fa-shopping-cart cart-icon"></i> Carrito de Compra
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold fs-4" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold fs-4" href="{% url 'contact' %}">Contacto</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold fs-4" href="{% url 'signin' %}">Iniciar Sesión</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Content -->
-    <div class="container-md" style="padding-top:10vh;">
-        <div class="row">
-            <div class="col-lg-6 col-12">
-                <img src="{% static 'assets/img/logo2.png' %}" id="logo-fluid" alt="" style="max-width: 70vh;">
-            </div>  
-            <div class="col-lg-6 col-12 text-center">
-                <h1 style="color: white; text-align: center;">La lectura es la llave que abre las puertas al conocimiento, la
-                    imaginación y el entendimiento, permitiéndonos explorar mundos
-                    infinitos sin movernos del sitio.</h1>
-                <div class="button-container">
-                    <a href="{% url 'catalogue' %}"><button>Empieza a leer</button></a>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col text-center">
-                <form id="search-form">
-                    <input type="text" name="barra-busqueda" id="barra-busqueda" placeholder="Escribe el título o autor del libro">
-                    <button type="submit">Buscar</button>
-                  </form>
-            </div>
-        </div>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#"><img src="assent/img/logo pagina.png" alt="Logo" style="height: 100px;"></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link centrar" href="#">AGREGAR PRODUCTO</a></li>
+        <li class="nav-item"><a class="nav-link centrar" href="#">LISTAR PRODUCTO</a></li>
+      </ul>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link active centrar" href="#">INICIO</a></li>
+        <li class="nav-item"><a class="nav-link centrar" href="#">HOMBRE</a></li>
+        <li class="nav-item"><a class="nav-link centrar" href="#">MUJER</a></li>
+        <li class="nav-item"><a class="nav-link centrar" href="#">NIÑOS</a></li>
+        <li class="nav-item"><a class="nav-link centrar" href="#">INICIAR SESIÓN</a></li>
+      </ul>
     </div>
+  </div>
+</nav>
 
-    <!-- Footer -->
-    <footer>
-        <div>
-            <div>
-                <div>Copyright &copy; BiblioWeb 2024</div>
-            </div>
+<div class="barra-negra">
+  <div class="barra">
+    <div class="clear">
+      <p><strong>👟 CLICK & COLLECT</strong>! Compra online y <strong>retira en tienda gratis</strong>, desde un día hábil!!</p>
+    </div>
+  </div>
+</div>
+
+<div class="container-carousel centrar">
+  <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="assent/img/zapa.png" class="d-block w-100" alt="Publicidad Vans">
+      </div>
+      <div class="carousel-item">
+        <img src="assent/img/nikeeeeee.png" class="d-block w-100" alt="Publicidad Nike">
+      </div>
+      <div class="carousel-item">
+        <img src="assent/img/publiiciidad-adiidas.png" class="d-block w-100" alt="Publicidad Adidas">
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </button>
+  </div>
+</div>
+
+<div class="barra-negra mt-4">
+  <div class="barra">
+    <div class="clear">
+      <p><strong>PRODUCTOS MÁS VENDIDOS</strong></p>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-5">
+  <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="3000">
+    <div class="carousel-inner-custom" id="carousel-inner-custom">
+      <!-- Aquí van las tarjetas del carrusel -->
+    </div>
+  </div>
+</div>
+
+<!-- Modal de detalle -->
+<div class="modal fade" id="zapatillaModalCustom" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Detalles de la Zapatilla</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="zapatillaDetalleCustom">
+        <!-- Aquí se cargarán los detalles -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer mt-5">
+  <div class="conteiner-footer">
+    <div class="footer-row">
+      <div class="footer-links">
+        <h4>SERVICIO Y SOPORTE</h4>
+        <li><a href="#">Preguntas frecuentes</a></li>
+        <li><a href="#">Términos y condiciones</a></li>
+        <li><a href="#">Políticas de Devolución</a></li>
+        <li><a href="#">Tiendas</a></li>
+      </div>
+      <div class="footer-links">
+        <h4>CATEGORÍAS</h4>
+        <li><a href="#">Niño</a></li>
+        <li><a href="#">Hombre</a></li>
+        <li><a href="#">Mujer</a></li>
+      </div>
+      <div class="footer-links">
+        <h4>INFORMACIÓN DE LA EMPRESA</h4>
+        <li><a href="#">Acerca de Zapatillas San Antonio</a></li>
+        <li><a href="#">Trabaja en Nuestro Equipo</a></li>
+        <li><a href="#">Prensa</a></li>
+      </div>
+      <div class="footer-links">
+        <h4>SÍGUENOS</h4>
+        <div class="social-link">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-linkedin"></i></a>
         </div>
-    </footer>   
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="assent/js/carrusel-index.js"></script>
+
 </body>
 </html>
