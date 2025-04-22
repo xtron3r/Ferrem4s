@@ -58,19 +58,9 @@ text-align: center;
 .margin-top{
 margin-top: 10rem;
 }
-
-
-
    /* styles nav bar */
 nav{
-  display: flex;
-  align-items:center;
-  justify-content: space-between;
-  padding-top: 20px;
-  padding-left: 5%;
-  padding-right: 5%;
   font-weight: bold;
-  
 }
 h1{
   color: rgb(0, 0, 0);
@@ -78,10 +68,7 @@ h1{
   font-family:serif
   
 }
-ul li{
-  display:inline-block;
-  padding : 0px 20px
-}
+
 a{
   color: rgb(0, 0, 0);
   text-decoration:none ;

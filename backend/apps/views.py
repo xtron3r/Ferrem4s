@@ -301,7 +301,7 @@ def contact(request):
         email_content = f"Email: {email}\nSolicita recuperación de contraseña."
 
         send_mail(
-            subject, email_content, email, ["kel.moreno@duocuc.cl"], fail_silently=False
+            subject, email_content, email, ["@duocuc.cl"], fail_silently=False
         )
 
         return HttpResponseRedirect("/contact/enviado/")
