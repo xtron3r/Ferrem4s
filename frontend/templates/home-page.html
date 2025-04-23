@@ -21,7 +21,7 @@
 <body>
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#"><img src="../static/assets/img/logoferremas.svg" alt="Logo" style="width: 100px;"></a>
+      <a class="navbar-brand" href="{% url 'home_page' %}"><img src="../static/assets/img/logoferremas.svg" alt="Logo" style="width: 100px;"></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -39,7 +39,7 @@
               <li class="nav-item"><a class="nav-link text-black" href="#">{{user.username}}</a></li>
             {% endif %}
             <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-cart4 fs-3"></i></a></li>
-            <li class="nav-item"><a class="nav-link text-black" href="#">CERRAR SESIÓN</a></li>
+            <li class="nav-item"><a class="nav-link text-black" href="{% url 'logout' %}">CERRAR SESIÓN</a></li>
           {% else %}
             <li class="nav-item"><a class="nav-link text-black" href="{% url 'signin' %}">INICIAR SESIÓN</a></li>
           {% endif %}
@@ -121,17 +121,12 @@
           <li><a href="#">Políticas de Devolución</a></li>
           <li><a href="#">Tiendas</a></li>
         </div>
-        <div class="footer-links">
-          <h4>CATEGORÍAS</h4>
-          <li><a href="#">Niño</a></li>
-          <li><a href="#">Hombre</a></li>
-          <li><a href="#">Mujer</a></li>
-        </div>
+       
         <div class="footer-links">
           <h4>INFORMACIÓN DE LA EMPRESA</h4>
-          <li><a href="#">Acerca de Zapatillas San Antonio</a></li>
+          <li><a href="#">Acerca de FerreMas</a></li>
           <li><a href="#">Trabaja en Nuestro Equipo</a></li>
-          <li><a href="#">Prensa</a></li>
+          
         </div>
         <div class="footer-links">
           <h4>SÍGUENOS</h4>
