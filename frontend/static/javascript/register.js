@@ -28,46 +28,6 @@ $(document).ready(function () {
                 equalTo: "Las contraseñas no coinciden",
             },
         },
-        errorElement: 'div',
-        errorPlacement: function (error, element) {
-            error.addClass('invalid-feedback');
-            element.closest('.form-group').append(error);
-        },
-        highlight: function (element, errorClass, validClass) {
-            $(element).addClass('is-invalid');
-        },
-        unhighlight: function (element, errorClass, validClass) {
-            $(element).removeClass('is-invalid');
-        },
+        // AQUI VA INFO
     });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    var registerForm = document.getElementById('registerForm');
-
-    if (registerForm) {
-        registerForm.addEventListener('submit', function(event) {
-            event.preventDefault(); 
-
-            var registerNameInput = document.getElementById('registerName');
-            var registerEmailInput = document.getElementById('registerEmail');
-            var registerPasswordInput = document.getElementById('registerPassword');
-            var confirmPasswordInput = document.getElementById('confirmPassword');
-
-            if (registerNameInput && registerEmailInput && registerPasswordInput && confirmPasswordInput) {
-                if (registerPasswordInput.value === confirmPasswordInput.value) {
-                    registerForm.submit();
-                } else {
-                    var passwordFeedback = document.getElementById('passwordFeedback');
-                    if (passwordFeedback) {
-                        passwordFeedback.textContent = 'Las contraseñas no coinciden.';
-                    }
-                }
-            } else {
-                console.error('Algunos elementos del formulario no existen.');
-            }
-        });
-    } else {
-        console.error('El formulario de registro no se encontró.');
-    }
 });

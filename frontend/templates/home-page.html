@@ -27,21 +27,21 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto gap-3">
-          <li class="nav-item"><a class="nav-link active" href="#">INICIO</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">TIENDA</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">CATEGORIA</a></li>
+          <li class="nav-item"><a class="nav-link active text-black" href="#">INICIO</a></li>
+          <li class="nav-item"><a class="nav-link text-black" href="#">TIENDA</a></li>
+          <li class="nav-item"><a class="nav-link text-black" href="#">CATEGORIA</a></li>
         </ul>
         <ul class="navbar-nav ms-auto d-flex align-items-center gap-2">
           {% if user.is_authenticated %}
             {% if user.is_superuser %}
-              <li class="nav-item"><a class="nav-link" href="#">ADMIN PANEL</a></li>
+              <li class="nav-item"><a class="nav-link text-black" href="#">ADMIN PANEL</a></li>
             {% else %}
-              <li class="nav-item"><a class="nav-link" href="#">{{user.username}}</a></li>
+              <li class="nav-item"><a class="nav-link text-black" href="#">{{user.username}}</a></li>
             {% endif %}
             <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-cart4 fs-3"></i></a></li>
-            <li class="nav-item"><a class="nav-link" href="#">CERRAR SESIÓN</a></li>
+            <li class="nav-item"><a class="nav-link text-black" href="#">CERRAR SESIÓN</a></li>
           {% else %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'signin' %}">INICIAR SESIÓN</a></li>
+            <li class="nav-item"><a class="nav-link text-black" href="{% url 'signin' %}">INICIAR SESIÓN</a></li>
           {% endif %}
         </ul>
       </div>
@@ -111,7 +111,7 @@
   </div>
 
   <!-- Footer -->
-  <footer class="footer mt-5">
+  <footer class="footer mt-5 bg-black">
     <div class="conteiner-footer">
       <div class="footer-row">
         <div class="footer-links">
