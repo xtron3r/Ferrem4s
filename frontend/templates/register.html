@@ -42,6 +42,12 @@
                         <input placeholder="Confirmar contraseña" type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
                         <div id="passwordFeedback" class="invalid-feedback">La contraseña debe contener al menos una mayúscula y un número, y coincidir con la confirmación</div>
                     </div>
+                    {% if error %}
+                    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                        {{ error }}
+                    </div>
+                    {% endif %}
+
     
                     <button type="submit" class="btn btn-warning w-100">Registrarse</button>
                     <p class="text-center mt-3">

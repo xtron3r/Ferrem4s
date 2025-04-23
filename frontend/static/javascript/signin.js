@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $("#loginForm").validate({
         rules: {
-            username: {
+            email: {
                 required: true,
                 email: true
             },
@@ -10,12 +10,17 @@ $(document).ready(function () {
             }
         },
         messages: {
-            username: {
-                required: "Por favor ingresa tu usuario."
+            email: {
+                required: "Por favor ingresa tu correo.",
+                email: "Por favor ingresa un correo electrónico válido"
             },
             password: {
                 required: "Por favor ingresa tu contraseña"
             }
+        },
+        errorPlacement: function (error, element) {
+            error.addClass("text-warning fw-semibold"); // Color y estilo
+            error.insertAfter(element);
         },
         submitHandler: function (form) {
             $.ajax({

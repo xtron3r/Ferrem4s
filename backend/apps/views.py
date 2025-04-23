@@ -10,6 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 import json
 from django.views.decorators.csrf import csrf_exempt
+from .forms import EmailAuthenticationForm
 
 from django.views import View
 from django.views.generic import (
@@ -30,8 +31,18 @@ def register(request):
     if request.method == "GET":
         return render(request, "register.html", {"form": UserCreationForm})
     else:
-
         if request.POST["registerPassword"] == request.POST["confirmPassword"]:
+            # Verifica si el correo ya existe
+            if User.objects.filter(email=request.POST["registerEmail"]).exists():
+                return render(
+                    request,
+                    "register.html",
+                    {
+                        "form": UserCreationForm,
+                        "error": "Ya existe una cuenta con ese correo electrónico.",
+                    },
+                )
+
             try:
                 user = User.objects.create_user(
                     username=request.POST["registerName"],
@@ -45,39 +56,37 @@ def register(request):
             except IntegrityError:
                 return render(
                     request,
-                    "register_error.html",
-                    {"form": UserCreationForm, "error": "Username already exists."},
+                    "register.html",
+                    {
+                        "form": UserCreationForm,
+                        "error": "El nombre de usuario ya está en uso.",
+                    },
                 )
 
         return render(
             request,
-            "signup.html",
-            {"form": UserCreationForm, "error": "Passwords did not match."},
+            "register.html",
+            {"form": UserCreationForm, "error": "Las contraseñas no coinciden."},
         )
 
 
 def register_error(request):
-    return render(request, "register_error.html")
+    error = "Correo ya registrado."
+    return render(request, "register.html", {"error": error})
 
 
 def signin_user(request):
     if request.method == "GET":
-        form = AuthenticationForm()
+        form = EmailAuthenticationForm()
         return render(request, "signin.html", {"form": form})
     elif request.method == "POST":
-        form = AuthenticationForm(data=request.POST)
+        form = EmailAuthenticationForm(data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get("username")
-            password = form.cleaned_data.get("password")
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect("home_page")
-            else:
-                error = "Username or password is incorrect."
+            user = form.get_user()
+            login(request, user)
+            return redirect("home_page")
         else:
-            error = "Invalid form data. Please check your input."
-
+            error = "Correo o contraseña incorrectos."
         return render(request, "signin.html", {"form": form, "error": error})
 
 
