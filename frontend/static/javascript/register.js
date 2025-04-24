@@ -40,6 +40,5 @@ $(document).ready(function () {
                 equalTo: "Las contraseñas no coinciden",
             },
         },
-        // AQUI VA INFO
     });
 });

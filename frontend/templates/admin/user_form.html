@@ -20,16 +20,15 @@
     <!-- Font Awesome (Icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        body {
-            background-color: black;
+         body {
+            background-image: url("{% static 'assets/img/logoferremas.svg' %}");
         }
         .container {
             display: flex;
         }
         .sidebar {
             padding: 1rem;
-            background-color: #343a40;
-            border-radius: 5px;
+            background-color: black;    
         }
         .sidebar-item {
             padding: 0.5rem 1rem;
@@ -52,9 +51,6 @@
     <div class="container-fluid">
         <div class="row">
             <nav class="col-md-3 col-lg-2 d-md-block sidebar">
-                <div class="logo mb-3">
-                    <!-- Aquí puedes agregar un logo -->
-                </div>
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         <a class="nav-link sidebar-item" href="{% url 'libros_list' %}">Libros</a>
@@ -68,31 +64,31 @@
                 </ul>
             </nav>
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div style="margin-top: 100px;" class="content">
-                    <h1>Agregar Nuevo Usuario</h1>
-                    <form method="post">
+                <div class="content">
+                    <h1 class="text-center fw-bolder bg-black text-warning">Agregar nuevo Usuario</h1>
+                    <form method="post" class="bg-black p-5 text-warning fw-bold">
                         {% csrf_token %}
-                        <div class="form-group">
+                        <div class="form-group m-2">
                             <label for="username">Nombre de usuario</label>
                             <input type="text" class="form-control" id="username" name="username" required>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group m-2">
                             <label for="email">Email</label>
                             <input type="email" class="form-control" id="email" name="email" required>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group m-2">
                             <label for="password">Contraseña</label>
                             <input type="password" class="form-control" id="password" name="password" required>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group m-2">
                             <label for="confirm_password">Confirmar Contraseña</label>
                             <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group m-2">
                             <label for="is_superuser">¿Es Administrador?</label>
                             <input type="checkbox" id="is_superuser" name="is_superuser">
                         </div>
-                        <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+                        <button type="submit" class="btn btn-warning text-black mt-3 fw-bold">GUARDAR</button>
                     </form>
                 </div>
             </main>
