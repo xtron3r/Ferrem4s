@@ -86,26 +86,34 @@
     </div>
   </div>
 
-  <div class="container mt-5">
-    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="3000">
-      <div class="carousel-inner-custom" id="carousel-inner-custom">
-        <!-- Aquí van las tarjetas del carrusel -->
-
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal de detalle -->
-  <div class="modal fade" id="zapatillaModalCustom" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Detalles de la Zapatilla</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+ 
+  <div class="container mt-4">
+    <div class="p-3 border rounded" style="max-height: 300px; overflow: hidden;">
+      <div id="multiImageCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <!-- Primer grupo de 3 imágenes -->
+          <div class="carousel-item active">
+            <div class="row">
+              <div class="col-4">
+                <img src="{% static 'assets/img/taladro.png' %}" class="d-block w-20 cover "  alt="...">
+              </div>
+              <div class="col-4">
+                <img src="{% static 'assets/img/taladro2.png'' %}" class="d-block w-20" alt="...">
+              </div>
+              <div class="col-4">
+                <img src="{% static 'assets/img/taladro3.jpg'' %}" class="d-block w-20" alt="...">
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="modal-body" id="zapatillaDetalleCustom">
-          <!-- Aquí se cargarán los detalles -->
-        </div>
+  
+        <!-- Controles del carrusel -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#multiImageCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#multiImageCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon"></span>
+        </button>
       </div>
     </div>
   </div>
