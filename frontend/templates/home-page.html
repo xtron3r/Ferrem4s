@@ -21,37 +21,66 @@
 <body>
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'home_page' %}"><img src="../static/assets/img/logoferremas.svg" alt="Logo" style="width: 100px;"></a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto gap-3">
-          <li class="nav-item"><a class="nav-link active text-black" href="#">INICIO</a></li>
-          <li class="nav-item"><a class="nav-link text-black" href="#">TIENDA</a></li>
-          <li class="nav-item"><a class="nav-link text-black" href="#">CATEGORIA</a></li>
-        </ul>
-        <ul class="navbar-nav ms-auto d-flex align-items-center gap-2">
-          {% if user.is_authenticated %}
-            {% if user.is_superuser %}
-              <li class="nav-item"><a class="nav-link text-black" href="{% url 'administracion' %}">ADMIN PANEL</a></li>
+      <a class="navbar-brand d-lg-none" href="{% url 'home_page' %}">
+        <img src="../static/assets/img/logoferremas.svg" alt="Logo" style="width: 100px;">
+      </a>
+      {% if user.is_authenticated %}
+      <a class="nav-link d-lg-none me-3" href="#"><i class="bi bi-cart4 fs-3"></i></a>
+      {% endif %}
+
+      <div class="collapse navbar-collapse" id="navbarMain">
+        <div class="row w-100">
+          
+          <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center justify-content-lg-start align-items-center gap-2 mb-3 mb-lg-0">
+            <a class="navbar-brand d-none d-lg-inline " href="{% url 'home_page' %}">
+              <img src="../static/assets/img/logoferremas.svg" alt="Logo" style="width: 100px;">
+            </a>      
+          </div>
+
+          <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center align-items-center mb-3 mb-lg-0 gap-3">
+            <a class="nav-link text-black fw-bold" href="#">INICIO</a>
+            <a class="nav-link text-black fw-bold" href="#">QUIENES SOMOS</a>
+            <a class="nav-link text-black fw-bold" href="#">CONTACTO</a>
+          </div>
+
+          <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center justify-content-lg-end align-items-center gap-lg-4 gap-3">
+            {% if user.is_authenticated %}
+              {% if user.is_superuser %}
+                <a class="nav-link text-black" href="{% url 'administracion' %}">ADMIN PANEL</a>
+              {% else %}
+                <span class="nav-link text-black">{{ user.username }}</span>
+              {% endif %}
+              <a class="nav-link text-black" href="{% url 'logout' %}">CERRAR SESIÓN</a>
+              <a class="nav-link d-none d-lg-inline" href="#"><i class="bi bi-cart4 fs-3"></i></a>
             {% else %}
-              <li class="nav-item"><a class="nav-link text-black" href="#">{{user.username}}</a></li>
+              <a class="nav-link text-black fw-bold" href="{% url 'signin' %}">INICIAR SESIÓN</a>
             {% endif %}
-            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-cart4 fs-3"></i></a></li>
-            <li class="nav-item"><a class="nav-link text-black" href="{% url 'logout' %}">CERRAR SESIÓN</a></li>
-          {% else %}
-            <li class="nav-item"><a class="nav-link text-black" href="{% url 'signin' %}">INICIAR SESIÓN</a></li>
-          {% endif %}
-        </ul>
+          </div>
+        </div>
       </div>
     </div>
   </nav>
 
+  <!-- NAVBAR DE CATEGORÍAS -->
+  <div class="container-fluid bg-warning py-3 mb-3">
+    <h4 class="fw-bold text-center">CATEGORIAS</h4>
+    <ul class="list-unstyled d-flex flex-column flex-md-row justify-content-center gap-4 text-center">
+      <li><a href="#" class="text-decoration-none text-black fw-bold">Herramientas</a></li>
+      <li><a href="#" class="text-decoration-none text-black fw-bold">Materiales de Construcción</a></li>
+      <li><a href="#" class="text-decoration-none text-black fw-bold">Pinturas y Adhesivos</a></li>
+      <li><a href="#" class="text-decoration-none text-black fw-bold">Tornillería</a></li>
+      <li><a href="#" class="text-decoration-none text-black fw-bold">Seguridad y Protección</a></li>
+    </ul>
+  </div>
+
   <div class="barra-negra">
     <div class="barra">
       <div class="clear bg-warning">
-        <p class="text-black"><strong class="text-black">🔧 COMPRA FÁCIL</strong>! Haz tu pedido online y <strong class="text-black">recíbelo en casa o retíralo en tienda</strong>, ¡desde un día hábil!</p>
+        <p class="text-black fs-5"><strong class="text-black">🔧 COMPRA FÁCIL</strong>! Haz tu pedido online y <strong class="text-black">recíbelo en casa o retíralo en tienda</strong>, ¡desde un día hábil!</p>
       </div>
     </div>
   </div>
@@ -81,41 +110,122 @@
   <div class="barra-negra mt-4">
     <div class="barra">
       <div class="clear bg-warning">
-        <p class="text-black"><strong>PRODUCTOS MÁS VENDIDOS</strong></p>
+        <p class="text-black fs-2"><strong>PRODUCTOS MÁS VENDIDOS</strong></p>
       </div>
     </div>
   </div>
 
- 
-  <div class="container mt-4">
-    <div class="p-3 border rounded" style="max-height: 300px; overflow: hidden;">
-      <div id="multiImageCarousel" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-          <!-- Primer grupo de 3 imágenes -->
-          <div class="carousel-item active">
-            <div class="row">
-              <div class="col-4">
-                <img src="{% static 'assets/img/taladro.png' %}" class="d-block w-20 cover "  alt="...">
+  <div class="container py-4">
+    <div id="carouselmasvendido" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
+      <div class="carousel-inner">
+        
+        <!-- Slide 1 -->
+        <div class="carousel-item active">
+          <div class="row justify-content-center">
+            <div class="col-md-4">
+              <div class="card text-center border-0">
+                <img src="../static/assets/img/taladro3.jpg" class="card-img-top" style="height: 400px; " alt="Producto 1">
+                <div class="card-body">
+                  <h5 class="card-title">Taladro Stanley 650W</h5>
+                  <p class="mb-1"><small class="text-muted text-decoration-line-through">$89.990</small> <span class="text-danger fw-bold ms-2">$69.990</span></p>
+                  <button class="btn btn-outline-primary btn-sm">Ver producto</button>
+                </div>
               </div>
-              <div class="col-4">
-                <img src="{% static 'assets/img/taladro2.png'' %}" class="d-block w-20" alt="...">
+            </div>
+            <div class="col-md-4 d-none d-md-block">
+              <div class="card text-center border-0">
+                <img src="../static/assets/img/taladro2.png" class="card-img-top" style="height: 400px;" alt="Producto 2">
+                <div class="card-body">
+                  <h5 class="card-title">Sierra Circular Makita</h5>
+                  <p class="mb-1"><small class="text-muted text-decoration-line-through">$149.990</small> <span class="text-danger fw-bold ms-2">$119.990</span></p>
+                  <button class="btn btn-outline-primary btn-sm">Ver producto</button>
+                </div>
               </div>
-              <div class="col-4">
-                <img src="{% static 'assets/img/taladro3.jpg'' %}" class="d-block w-20" alt="...">
+            </div>
+            <div class="col-md-4 d-none d-md-block">
+              <div class="card text-center border-0">
+                <img src="../static/assets/img/taladro.png" class="card-img-top" style="height: 400px; " alt="Producto 3">
+                <div class="card-body">
+                  <h5 class="card-title">Sellador Sika Multiusos</h5>
+                  <p class="mb-1"><small class="text-muted text-decoration-line-through">$9.990</small> <span class="text-danger fw-bold ms-2">$6.990</span></p>
+                  <button class="btn btn-outline-primary btn-sm">Ver producto</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-  
-        <!-- Controles del carrusel -->
-        <button class="carousel-control-prev" type="button" data-bs-target="#multiImageCarousel" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon"></span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#multiImageCarousel" data-bs-slide="next">
-          <span class="carousel-control-next-icon"></span>
-        </button>
+              <!-- aqui van mas-->
+      </div>
+
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselmasvendido" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselmasvendido" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="barra-negra mt-4">
+    <div class="barra">
+      <div class="clear bg-warning">
+        <p class="text-black fs-2"><strong>NUESTRAS MARCAS</strong></p>
       </div>
     </div>
+  </div>
+
+  <div class="container-carousel centrar w-50 h-50">
+    <div id="carouselmarcas" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="../static/assets/img/stanley-tools-vector-logo.png" class=" d-block  w-100 h-100" style=" object-fit: cover;" alt="banner">
+        </div>
+        <div class="carousel-item">
+          <img src="../static/assets/img/Makita_Logo.svg.png" class="d-block w-100 h-100 " style=" object-fit: cover;" alt="banner2">
+        </div>
+        <div class="carousel-item">
+          <img src="../static/assets/img/sika-group-vector-logo.png" class="d-block w-100 h-100 " style=" object-fit: cover;" alt="banner3">
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselmarcas" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselmarcas" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mt-3">
+    <img src="../static/assets/img/banner-ferremas.png" alt="banner ferremas" class="img-fluid p-0 m-0">
+  </div>
+
+  <div class="barra-negra mt-5">
+    <div class="barra">
+      <div class="clear bg-warning">
+        <p class="text-black fs-2"><strong>CATEGORIAS</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <p class="d-sm-none">CATEGORIAS</p>
+        <div class="collapse navbar-collapse justify-content-center p-3" id="navbarNav">
+          <ul class="navbar-nav gap-3">
+            <li class="nav-item"><a class="nav-link active text-black bg-warning rounded-3" href="#">Herramientas</a></li>
+            <li class="nav-item"><a class="nav-link text-black bg-warning rounded-3" href="#">Materiales de Construcción</a></li>
+            <li class="nav-item"><a class="nav-link text-black bg-warning rounded-3" href="#">Pinturas y Adhesivos</a></li>
+            <li class="nav-item"><a class="nav-link text-black bg-warning rounded-3" href="#">Tornillería</a></li>
+            <li class="nav-item"><a class="nav-link text-black bg-warning rounded-3" href="#">Seguridad y Protección</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
   </div>
 
   <!-- Footer -->
@@ -150,7 +260,5 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="assent/js/carrusel-index.js"></script>
-
 </body>
 </html>
