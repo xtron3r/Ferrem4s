@@ -1,13 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-class Productos(models.Model):
-    codigoProducto = models.CharField(max_length=200, null=True, blank=True)
+class Producto(models.Model):
+    codigoProducto = models.CharField(max_length=200, null=True, blank=True, unique=True)
     nombreProducto = models.CharField(max_length=200, null=True, blank=True)
     marcaProducto = models.CharField(max_length=200, null=True, blank=True)
     descripcionProducto = models.TextField(max_length=1000, null=True, blank=True)
     precioProducto = models.PositiveIntegerField()
+    stockProducto = models.PositiveIntegerField(default=0)
+    categoriaProducto = models.CharField(max_length=200, null=True, blank=True)
     portadaProducto = models.ImageField(upload_to="images/", null=True, blank=True)
+    requiere_envio = models.BooleanField(default=True)
 
     def __str__(self):
         return self.nombreProducto
@@ -52,7 +55,7 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    producto = models.ForeignKey(Productos, on_delete=models.SET_NULL, null=True)
+    producto = models.ForeignKey(Producto, on_delete=models.SET_NULL, null=True)
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
     quantity = models.IntegerField(default=0, null=True, blank=True)
     date_added = models.DateTimeField(auto_now_add=True)

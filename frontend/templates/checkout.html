@@ -132,16 +132,9 @@
                     <div class="cart-row">
                         <div style="flex:2"><img style="max-width: 100px; max-height: 150px; width: 100px; height: 150px;" class="row-image" src="{{ item.libro.portadaLibro.url }}" alt=""></div>
                         <div style="flex:4">
-                            <p>{{item.libro.tituloLibro}}</p>
-                            {% if item.libro.archivoLibro %}
-                                <div style="flex:1; margin-top: 80px; margin-left: 0px;">
-                                    <a href="{{item.libro.archivoLibro.url}}" download>
-                                        <button id="dowmload-button" class="btn btn-success">Descargar</button>
-                                    </a>
-                                </div>
-                            {% endif %}
+                            <p>{{item.producto.nombreProducto}}</p>
                         </div>
-                        <div style="flex:1"><p>${{item.libro.precioLibro|floatformat:2}}</p></div>
+                        <div style="flex:1"><p>${{item.producto.precioProducto|floatformat:2}}</p></div>
                         <div style="flex:1"><p>x{{item.quantity}}</p></div>
                     </div>
                     {% endfor %}

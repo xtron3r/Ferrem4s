@@ -23,7 +23,7 @@ from django.views.generic import (
 )
 
 from .models import *
-from .forms import LibroForm
+from .forms import ProductoForm
 
 
 # Create your views here.
@@ -95,48 +95,43 @@ def administracion(request):
     return render(request, "admin/adminhome.html")
 
 
-class LibroListView(LoginRequiredMixin, ListView):
-    model = Libro
-    template_name = "admin/libros_list.html"
-    context_object_name = "libros"
+class ProductoListView(LoginRequiredMixin, ListView):
+    model = Producto
+    template_name = "admin/productos_list.html"
+    context_object_name = "productos"
 
 
-class LibroCreateView(CreateView):
-    model = Libro
-    form_class = LibroForm
-    template_name = "admin/libros_form.html"
+class ProductoCreateView(CreateView):
+    model = Producto
+    form_class = ProductoForm
+    template_name = "admin/productos_form.html"
 
     def form_valid(self, form):
-        libro = form.save(commit=False)
-        archivo_libro = self.request.FILES.get("archivoLibro")
-        if archivo_libro:
-            if archivo_libro.name and len(archivo_libro.name) > 100:
-                archivo_libro.name = archivo_libro.name[:100]
-            libro.archivoLibro = archivo_libro
-        libro.save()
-        return redirect("libros_list")
+        producto = form.save(commit=False)
+        producto.save()
+        return redirect("productos_list")
 
 
-class LibroUpdateView(LoginRequiredMixin, UpdateView):
-    model = Libro
+class ProductoUpdateView(LoginRequiredMixin, UpdateView):
+    model = Producto
     fields = [
-        "tituloLibro",
-        "autorLibro",
-        "anioLibro",
-        "descripcionLibro",
-        "precioLibro",
-        "digital",
-        "portadaLibro",
-        "archivoLibro",
+        "codigoProducto",
+        "nombreProducto",
+        "marcaProducto",
+        "descripcionProducto",
+        "precioProducto",
+        "portadaProducto",
+        "stockProducto",
+        "categoriaProducto",
     ]
-    template_name = "admin/libros_update.html"
-    success_url = reverse_lazy("libros_list")
+    template_name = "admin/productos_update.html"
+    success_url = reverse_lazy("productos_list")
 
 
-class LibroDeleteView(LoginRequiredMixin, DeleteView):
-    model = Libro
-    template_name = "admin/libros_confirm_delete.html"
-    success_url = reverse_lazy("libros_list")
+class ProductoDeleteView(LoginRequiredMixin, DeleteView):
+    model = Producto
+    template_name = "admin/productos_confirm_delete.html"
+    success_url = reverse_lazy("productos_list")
 
 
 class UserListView(LoginRequiredMixin, ListView):
@@ -194,9 +189,9 @@ def home_page(request):
 
 
 class catalogueListView(ListView):
-    model = Libro
+    model = Producto
     template_name = "catalogue.html"
-    context_object_name = "libros"
+    context_object_name = "productos"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -219,8 +214,8 @@ class catalogueListView(ListView):
 
 
 @login_required
-def libro_detail(request, libro_id):
-    libro = get_object_or_404(Libro, pk=libro_id)
+def producto_detail(request, producto_id):
+    producto = get_object_or_404(Producto, pk=producto_id)
 
     if request.user.is_authenticated:
         user = request.user
@@ -232,7 +227,7 @@ def libro_detail(request, libro_id):
         order = {"get_cart_total": 0, "get_cart_items": 0, "shipping": False}
         cartItems = order["get_cart_items"]
 
-    context = {"libro": libro, "items": items, "order": order, "cartItems": cartItems}
+    context = {"producto": producto, "items": items, "order": order, "cartItems": cartItems}
     return render(request, "catalogue_detail.html", context)
 
 
@@ -269,17 +264,17 @@ def checkout(request):
 @csrf_exempt
 def updateItem(request):
     data = json.loads(request.body)
-    libroId = data.get("libroId")
+    productoId = data.get("productoId")
     action = data.get("action")
 
     print("Action:", action)
-    print("libroId:", libroId)
+    print("productoId:", productoId)
 
     user = request.user
-    libro = Libro.objects.get(id=libroId)
+    producto = Producto.objects.get(id=productoId)
     order, created = Order.objects.get_or_create(user=user, complete=False)
 
-    orderItem, created = OrderItem.objects.get_or_create(order=order, libro=libro)
+    orderItem, created = OrderItem.objects.get_or_create(order=order, producto=producto)
 
     if action == "add":
         orderItem.quantity = orderItem.quantity + 1
@@ -328,19 +323,18 @@ def contact_enviado(request):
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.response import Response
-from .models import Libro, Order, OrderItem, TarjetaCompra
+from .models import Order, OrderItem
 from django.contrib.auth.models import User
 from .serializers import (
-    LibroSerializer,
+    ProductoSerializer,
     OrderSerializer,
     OrderItemSerializer,
-    TarjetaCompraSerializer,
 )
 
 # Create your views here.
-class LibroViewSett(viewsets.ModelViewSet):
-    queryset = Libro.objects.all()
-    serializer_class = LibroSerializer
+class ProductoViewSett(viewsets.ModelViewSet):
+    queryset = Producto.objects.all()
+    serializer_class = ProductoSerializer
 
 
 class OrderViewSet(viewsets.ModelViewSet):
@@ -351,9 +345,4 @@ class OrderViewSet(viewsets.ModelViewSet):
 class OrderItemViewSet(viewsets.ModelViewSet):
     queryset = OrderItem.objects.all()
     serializer_class = OrderItemSerializer
-
-
-class TarjetaCompraViewSet(viewsets.ModelViewSet):
-    queryset = TarjetaCompra.objects.all()
-    serializer_class = TarjetaCompraSerializer
 

@@ -1,31 +1,29 @@
 from django import forms
-from .models import Libro
+from .models import Producto
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
 
 
-class LibroForm(forms.ModelForm):
+class ProductoForm(forms.ModelForm):
     class Meta:
-        model = Libro
+        model = Producto
         fields = [
-            "tituloLibro",
-            "autorLibro",
-            "anioLibro",
-            "descripcionLibro",
-            "precioLibro",
-            "digital",
-            "portadaLibro",
-            "archivoLibro",
+            "codigoProducto",
+            "nombreProducto",
+            "marcaProducto",
+            "descripcionProducto",
+            "precioProducto",
+            "portadaProducto",
+            "stockProducto",
+            "categoriaProducto",
         ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["archivoLibro"].widget.attrs.update(
-            {"accept": ".pdf, .doc, .docx, .txt"}
-        )
 
+# AUTENTICACION POR CORREO
 class EmailAuthenticationForm(forms.Form):
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)

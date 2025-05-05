@@ -53,7 +53,7 @@
             <nav class="col-md-3 col-lg-2 d-md-block sidebar">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link active sidebar-item" href="{% url 'libros_list' %}">Libros</a>
+                        <a class="nav-link active sidebar-item" href="{% url 'productos_list' %}">Productos</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link sidebar-item" href="{% url 'user_list' %}">Usuarios</a>
@@ -63,63 +63,78 @@
                     </li>
                 </ul>
             </nav>
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div class="content">
-                    <h1 class="text-center fw-bolder bg-black text-warning">Agregar Productos</h1>
+                    <h1 class="text-center fw-bolder bg-black text-warning">Editar Producto</h1>
                     <form method="POST" enctype="multipart/form-data" class="bg-black p-5 text-warning fw-bold">
                         {% csrf_token %}
                     
                         <div class="mb-3">
-                            <label for="id_tituloLibro" class="form-label">Título del Libro:</label>
-                            <input type="text" name="tituloLibro" id="id_tituloLibro" class="form-control" required>
+                            <label for="id_codigoProducto" class="form-label">Código del Producto:</label>
+                            <input type="text" name="codigoProducto" id="id_codigoProducto" class="form-control" 
+                                value="{{ form.codigoProducto.value|default_if_none:'' }}" required>
                         </div>
                     
                         <div class="mb-3">
-                            <label for="id_autorLibro" class="form-label">Autor:</label>
-                            <input type="text" name="autorLibro" id="id_autorLibro" class="form-control" required>
+                            <label for="id_nombreProducto" class="form-label">Nombre del Producto:</label>
+                            <input type="text" name="nombreProducto" id="id_nombreProducto" class="form-control" 
+                                value="{{ form.nombreProducto.value|default_if_none:'' }}" required>
                         </div>
                     
                         <div class="mb-3">
-                            <label for="id_anioLibro" class="form-label">Año:</label>
-                            <input type="number" name="anioLibro" id="id_anioLibro" class="form-control" required>
+                            <label for="id_marcaProducto" class="form-label">Marca:</label>
+                            <input type="text" name="marcaProducto" id="id_marcaProducto" class="form-control" 
+                                value="{{ form.marcaProducto.value|default_if_none:'' }}" required>
                         </div>
                     
                         <div class="mb-3">
-                            <label for="id_descripcionLibro" class="form-label">Descripción:</label>
-                            <textarea name="descripcionLibro" id="id_descripcionLibro" class="form-control" rows="4" required></textarea>
+                            <label for="id_descripcionProducto" class="form-label">Descripción:</label>
+                            <textarea name="descripcionProducto" id="id_descripcionProducto" class="form-control" rows="4" required>{{ form.descripcionProducto.value|default_if_none:'' }}</textarea>
                         </div>
                     
                         <div class="mb-3">
-                            <label for="id_precioLibro" class="form-label">Precio:</label>
-                            <input type="number" step="0.01" name="precioLibro" id="id_precioLibro" class="form-control" required>
-                        </div>
-                    
-                        <div class="mb-3 form-check">
-                            <input type="checkbox" name="digital" id="id_digital" class="form-check-input">
-                            <label class="form-check-label" for="id_digital">¿Es digital?</label>
+                            <label for="id_precioProducto" class="form-label">Precio:</label>
+                            <input type="number" step="0.01" name="precioProducto" id="id_precioProducto" class="form-control" 
+                                value="{{ form.precioProducto.value|default_if_none:'' }}" required>
                         </div>
                     
                         <div class="mb-3">
-                            <label for="id_portadaLibro" class="form-label">Portada del Libro:</label>
-                            <input type="file" name="portadaLibro" id="id_portadaLibro" class="form-control" accept="image/*">
+                            <label for="id_stockProducto" class="form-label">Stock:</label>
+                            <input type="number" name="stockProducto" id="id_stockProducto" class="form-control" 
+                                value="{{ form.stockProducto.value|default_if_none:'' }}" required>
                         </div>
                     
                         <div class="mb-3">
-                            <label for="id_archivoLibro" class="form-label">Archivo del Libro:</label>
-                            <input type="file" name="archivoLibro" id="id_archivoLibro" class="form-control" accept=".pdf, .doc, .docx, .txt">
+                            <label for="id_categoriaProducto" class="form-label">Categoría:</label>
+                            <input type="text" name="categoriaProducto" id="id_categoriaProducto" class="form-control" 
+                                value="{{ form.categoriaProducto.value|default_if_none:'' }}" required>
+                        </div>
+                    
+                        <div class="mb-3">
+                            <label for="id_portadaProducto" class="form-label">Portada del Producto:</label>
+                            <input type="file" name="portadaProducto" id="id_portadaProducto" class="form-control" accept="image/*">
+                            {% if form.instance.portadaProducto %}
+                                <small class="d-block mt-2">Portada actual: 
+                                    <a href="{{ form.instance.portadaProducto.url }}" target="_blank">{{ form.instance.portadaProducto.name }}</a>
+                                </small>
+                            {% endif %}
                         </div>
                     
                         <button type="submit" class="btn btn-warning text-black fw-bold">GUARDAR PRODUCTO</button>
                     </form>
+                    
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
             </main>
         </div>
     </div>
+    
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- jQuery CDN -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <!-- JavaScript -->
-    <script src=""></script>
+
 </body>
 </html>

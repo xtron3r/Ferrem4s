@@ -55,7 +55,7 @@
                 <span class="nav-link text-black">{{ user.username }}</span>
               {% endif %}
               <a class="nav-link text-black" href="{% url 'logout' %}">CERRAR SESIÓN</a>
-              <a class="nav-link d-none d-lg-inline" href="#"><i class="bi bi-cart4 fs-3"></i></a>
+              <a class="nav-link d-none d-lg-inline" href="{% url 'checkout' %}"><i class="bi bi-cart4 fs-3"></i></a>
             {% else %}
               <a class="nav-link text-black fw-bold" href="{% url 'signin' %}">INICIAR SESIÓN</a>
             {% endif %}

@@ -66,11 +66,14 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "database/db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.oracle',
+        'NAME': 'localhost:1521/xe',
+        'USER': 'Ferremas',
+        'PASSWORD': 'ferre123',
     }
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
