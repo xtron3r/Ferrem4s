@@ -1,23 +1,20 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
-class Libro(models.Model):
-    tituloLibro = models.CharField(max_length=200, null=True, blank=True)
-    autorLibro = models.CharField(max_length=200, null=True, blank=True)
-    anioLibro = models.IntegerField(null=True, blank=True)
-    descripcionLibro = models.TextField(max_length=1000, null=True, blank=True)
-    precioLibro = models.DecimalField(max_digits=10, decimal_places=2)
-    digital = models.BooleanField(default=True, null=True, blank=True)
-    portadaLibro = models.ImageField(upload_to="images/", null=True, blank=True)
-    archivoLibro = models.FileField(upload_to="documents/", null=True, blank=True)
+class Productos(models.Model):
+    codigoProducto = models.CharField(max_length=200, null=True, blank=True)
+    nombreProducto = models.CharField(max_length=200, null=True, blank=True)
+    marcaProducto = models.CharField(max_length=200, null=True, blank=True)
+    descripcionProducto = models.TextField(max_length=1000, null=True, blank=True)
+    precioProducto = models.PositiveIntegerField()
+    portadaProducto = models.ImageField(upload_to="images/", null=True, blank=True)
 
     def __str__(self):
-        return self.tituloLibro
+        return self.nombreProducto
 
     class Meta:
-        verbose_name = "libro"
-        verbose_name_plural = "libros"
+        verbose_name = "producto"
+        verbose_name_plural = "productos"
 
 
 class Order(models.Model):
@@ -33,9 +30,8 @@ class Order(models.Model):
     def shipping(self):
         shipping = False
         orderitems = self.orderitem_set.all()
-        for i in orderitems:
-            if i.libro.digital == False:
-                shipping = True
+        for item in orderitems:
+            shipping = True
         return shipping
 
     @property
@@ -56,35 +52,19 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    libro = models.ForeignKey(Libro, on_delete=models.SET_NULL, null=True)
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=0)
+    producto = models.ForeignKey(Productos, on_delete=models.SET_NULL, null=True)
+    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
+    quantity = models.IntegerField(default=0, null=True, blank=True)
     date_added = models.DateTimeField(auto_now_add=True)
-
 
     @property
     def get_total(self):
-        total = self.libro.precioLibro * self.quantity
+        total = self.producto.precioProducto * self.quantity
         return total
+
+    def __str__(self):
+        return f'{self.producto.nombreProducto} ({self.quantity})'
 
     class Meta:
         verbose_name = "item de orden"
         verbose_name_plural = "items de orden"
-
-
-class TarjetaCompra(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
-    numeroTarjeta = models.IntegerField(null=False)
-    nombreTitular = models.CharField(max_length=200, null=False)
-    fechaCaducidad = models.CharField(max_length=200, null=False)
-    codigoCvc = models.IntegerField(null=False)
-    zipcode = models.CharField(max_length=200, null=False)
-    date_added = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return str(self.numeroTarjeta)
-
-    class Meta:
-        verbose_name = "tarjeta de compra"
-        verbose_name_plural = "tarjetas de compra"
