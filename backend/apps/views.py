@@ -1,38 +1,35 @@
+# ---- IMPORTACIONES ----
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import JsonResponse
-import json
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from .forms import EmailAuthenticationForm
-
+from django.core.mail import send_mail
 from django.views import View
 from django.views.generic import (
-    CreateView,
-    DeleteView,
-    DetailView,
-    ListView,
-    UpdateView,
-    TemplateView,
+    CreateView, DeleteView, DetailView, ListView, UpdateView, TemplateView
 )
+import json
 
 from .models import *
-from .forms import ProductoForm
+from .forms import EmailAuthenticationForm, ProductoForm
+from .serializers import ProductoSerializer, OrderSerializer, OrderItemSerializer
 
+from rest_framework import viewsets
+from rest_framework.response import Response
 
-# Create your views here.
+# ---- VISTAS DE AUTENTICACIÓN ----
+
 def register(request):
     if request.method == "GET":
         return render(request, "register.html", {"form": UserCreationForm})
     else:
         if request.POST["registerPassword"] == request.POST["confirmPassword"]:
-            # Verifica si el correo ya existe
             if User.objects.filter(email=request.POST["registerEmail"]).exists():
                 return render(
                     request,
@@ -69,12 +66,6 @@ def register(request):
             {"form": UserCreationForm, "error": "Las contraseñas no coinciden."},
         )
 
-
-def register_error(request):
-    error = "Correo ya registrado."
-    return render(request, "register.html", {"error": error})
-
-
 def signin_user(request):
     if request.method == "GET":
         form = EmailAuthenticationForm()
@@ -89,89 +80,17 @@ def signin_user(request):
             error = "Correo o contraseña incorrectos."
         return render(request, "signin.html", {"form": form, "error": error})
 
-
-@login_required
-def administracion(request):
-    return render(request, "admin/adminhome.html")
-
-
-class ProductoListView(LoginRequiredMixin, ListView):
-    model = Producto
-    template_name = "admin/productos_list.html"
-    context_object_name = "productos"
-
-
-class ProductoCreateView(CreateView):
-    model = Producto
-    form_class = ProductoForm
-    template_name = "admin/productos_form.html"
-
-    def form_valid(self, form):
-        producto = form.save(commit=False)
-        producto.save()
-        return redirect("productos_list")
-
-
-class ProductoUpdateView(LoginRequiredMixin, UpdateView):
-    model = Producto
-    fields = [
-        "codigoProducto",
-        "nombreProducto",
-        "marcaProducto",
-        "descripcionProducto",
-        "precioProducto",
-        "portadaProducto",
-        "stockProducto",
-        "categoriaProducto",
-    ]
-    template_name = "admin/productos_update.html"
-    success_url = reverse_lazy("productos_list")
-
-
-class ProductoDeleteView(LoginRequiredMixin, DeleteView):
-    model = Producto
-    template_name = "admin/productos_confirm_delete.html"
-    success_url = reverse_lazy("productos_list")
-
-
-class UserListView(LoginRequiredMixin, ListView):
-    model = User
-    template_name = "admin/user_list.html"
-    context_object_name = "users"
-
-
-class UserCreateView(LoginRequiredMixin, CreateView):
-    model = User
-    fields = ["username", "email", "password", "is_superuser"]
-    template_name = "admin/user_form.html"
-    success_url = reverse_lazy("user_list")
-
-    def form_valid(self, form):
-        user = form.save(commit=False)
-        password = form.cleaned_data["password"]
-        user.set_password(password)
-        user.save()
-        return super().form_valid(form)
-
-
-class UserUpdateView(LoginRequiredMixin, UpdateView):
-    model = User
-    fields = ["username", "email"]
-    template_name = "admin/user_update.html"
-    success_url = reverse_lazy("user_list")
-
-
-class UserDeleteView(LoginRequiredMixin, DeleteView):
-    model = User
-    template_name = "admin/user_confirm_delete.html"
-    success_url = reverse_lazy("user_list")
-
-
 @login_required
 def logout_view(request):
     logout(request)
     return redirect("home_page")
 
+def register_error(request):
+    error = "Correo ya registrado."
+    return render(request, "register.html", {"error": error})
+
+
+# ---- PÁGINA DE INICIO ----
 
 def home_page(request):
     if request.user.is_authenticated:
@@ -188,14 +107,22 @@ def home_page(request):
     return render(request, "home-page.html", context)
 
 
+# ---- VISTAS DE CATÁLOGO Y PRODUCTOS ----
+
 class catalogueListView(ListView):
     model = Producto
     template_name = "catalogue.html"
     context_object_name = "productos"
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        categoria = self.request.GET.get("categoria")
+        if categoria:
+            queryset = queryset.filter(categoriaProducto=categoria)
+        return queryset
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         if self.request.user.is_authenticated:
             user = self.request.user
             order, created = Order.objects.get_or_create(user=user, complete=False)
@@ -206,12 +133,14 @@ class catalogueListView(ListView):
             order = {"get_cart_total": 0, "get_cart_items": 0, "shipping": False}
             cartItems = order["get_cart_items"]
 
-        context["items"] = items
-        context["order"] = order
-        context["cartItems"] = cartItems
+        context.update({
+            "items": items,
+            "order": order,
+            "cartItems": cartItems,
+            "categoria_seleccionada": self.request.GET.get("categoria", None),
+        })
 
         return context
-
 
 @login_required
 def producto_detail(request, producto_id):
@@ -231,6 +160,8 @@ def producto_detail(request, producto_id):
     return render(request, "catalogue_detail.html", context)
 
 
+# ---- VISTAS DE CARRITO Y PAGO ----
+
 def cart(request):
     if request.user.is_authenticated:
         user = request.user
@@ -244,7 +175,6 @@ def cart(request):
 
     context = {"items": items, "order": order, "cartItems": cartItems}
     return render(request, "cart.html", context)
-
 
 def checkout(request):
     if request.user.is_authenticated:
@@ -277,26 +207,120 @@ def updateItem(request):
     orderItem, created = OrderItem.objects.get_or_create(order=order, producto=producto)
 
     if action == "add":
-        orderItem.quantity = orderItem.quantity + 1
+        orderItem.quantity += 1
     elif action == "remove":
-        orderItem.quantity = orderItem.quantity - 1
+        orderItem.quantity -= 1
     elif action == "delete":
-        orderItem.quantity = orderItem.quantity == 0
-
-    orderItem.save()
+        orderItem.quantity = 0
 
     if orderItem.quantity <= 0:
         orderItem.delete()
+    else:
+        orderItem.save()
 
-    return JsonResponse("Item was added", safe=False)
+    return JsonResponse("Item was updated", safe=False)
 
 
-# ! Configuracion Email
 
-from django.core.mail import send_mail
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render
 
+# ---- VISTAS ADMINISTRACIÓN PRODUCTOS ----
+
+@login_required
+def administracion(request):
+    return render(request, "admin/adminhome.html")
+
+class ProductoListView(LoginRequiredMixin, ListView):
+    model = Producto
+    template_name = "admin/productos_list.html"
+    context_object_name = "productos"
+
+class ProductoCreateView(CreateView):
+    model = Producto
+    form_class = ProductoForm
+    template_name = "admin/productos_form.html"
+
+    def form_valid(self, form):
+        form.save()
+        return redirect("productos_list")
+
+class ProductoUpdateView(LoginRequiredMixin, UpdateView):
+    model = Producto
+    fields = [
+        "codigoProducto", "nombreProducto", "marcaProducto", "descripcionProducto",
+        "precioProducto", "portadaProducto", "stockProducto", "categoriaProducto",
+    ]
+    template_name = "admin/productos_update.html"
+    success_url = reverse_lazy("productos_list")
+
+class ProductoDeleteView(LoginRequiredMixin, DeleteView):
+    model = Producto
+    template_name = "admin/productos_confirm_delete.html"
+    success_url = reverse_lazy("productos_list")
+
+
+# ---- VISTAS ADMINISTRACIÓN USUARIOS ----
+
+class UserListView(LoginRequiredMixin, ListView):
+    model = User
+    template_name = "admin/user_list.html"
+    context_object_name = "users"
+
+class UserCreateView(LoginRequiredMixin, CreateView):
+    model = User
+    fields = ["username", "email", "password", "is_superuser"]
+    template_name = "admin/user_form.html"
+    success_url = reverse_lazy("user_list")
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.set_password(form.cleaned_data["password"])
+        user.save()
+        return super().form_valid(form)
+
+class UserUpdateView(LoginRequiredMixin, UpdateView):
+    model = User
+    fields = ["username", "email"]
+    template_name = "admin/user_update.html"
+    success_url = reverse_lazy("user_list")
+
+class UserDeleteView(LoginRequiredMixin, DeleteView):
+    model = User
+    template_name = "admin/user_confirm_delete.html"
+    success_url = reverse_lazy("user_list")
+
+
+# ---- VISTAS BODEGUERO ----
+
+def home_bodeguero(request):
+    return render(request, 'bodeguero/home_bodeguero.html')
+
+def bodeguero_pedidos(request):
+    return render(request, 'bodeguero/order_list.html')
+
+class OrderListView(ListView):
+    model = Order
+    template_name = 'bodeguero/order_list.html'
+    context_object_name = 'ordenes'
+
+class OrdenDetailView(DetailView):
+    model = Order
+    template_name = 'bodeguero/order_detail.html'
+    context_object_name = 'orden'
+
+class OrderUpdateView(UpdateView):
+    model = Order
+    fields = []
+    template_name = 'bodeguero/order_detail.html'
+    success_url = reverse_lazy('order_list')
+
+    def post(self, request, *args, **kwargs):
+        order = self.get_object()
+        order.complete = not order.complete
+        order.save()
+        return redirect(self.success_url)
+
+
+# ---- VISTA CONTACTO / EMAIL ----
 
 def contact(request):
     if request.method == "POST":
@@ -304,45 +328,25 @@ def contact(request):
         subject = "Recuperación Contraseña"
         email_content = f"Email: {email}\nSolicita recuperación de contraseña."
 
-        send_mail(
-            subject, email_content, email, ["@duocuc.cl"], fail_silently=False
-        )
-
+        send_mail(subject, email_content, email, ["@duocuc.cl"], fail_silently=False)
         return HttpResponseRedirect("/contact/enviado/")
 
     return render(request, "contact.html")
-
 
 def contact_enviado(request):
     return render(request, "contact_enviado.html")
 
 
-# -------------------------------------------------------------------------------
+# ---- API REST FRAMEWORK ----
 
-
-from django.shortcuts import render
-from rest_framework import viewsets
-from rest_framework.response import Response
-from .models import Order, OrderItem
-from django.contrib.auth.models import User
-from .serializers import (
-    ProductoSerializer,
-    OrderSerializer,
-    OrderItemSerializer,
-)
-
-# Create your views here.
 class ProductoViewSett(viewsets.ModelViewSet):
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializer
-
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
-
 class OrderItemViewSet(viewsets.ModelViewSet):
     queryset = OrderItem.objects.all()
     serializer_class = OrderItemSerializer
-

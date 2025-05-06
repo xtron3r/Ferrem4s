@@ -2,20 +2,20 @@ var updateBtns = document.getElementsByClassName('update-cart');
 
 for (var i = 0; i < updateBtns.length; i++) {
     updateBtns[i].addEventListener('click', function() {
-        var libroId = this.dataset.libro;
+        var productoId = this.dataset.producto;
         var action = this.dataset.action;
-        console.log('libroId:', libroId, 'action:', action);
+        console.log('productoId:', productoId, 'action:', action);
 
         console.log('USER:', user);
         if (user === 'AnonymousUser') {
-            console.log('User is not authenticated');
+            window.location.href = '/signin/';
         } else {
-            updateUserOrder(libroId, action);
+            updateUserOrder(productoId, action);
         }
     });
 }
 
-function updateUserOrder(libroId, action) {
+function updateUserOrder(productoId, action) {
     console.log('User is authenticated, sending data...');
 
     var url = '/update_item/';
@@ -26,10 +26,10 @@ function updateUserOrder(libroId, action) {
             'Content-Type': 'application/json',
             'X-CSRFToken': csrftoken,
         },
-        body: JSON.stringify({'libroId': libroId, 'action': action})
+        body: JSON.stringify({'productoId': productoId, 'action': action})
     })
     .then((response) => {
-       return response.json();
+        return response.json();
     })
     .then((data) => {
         console.log('data:', data);

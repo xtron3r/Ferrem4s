@@ -48,6 +48,15 @@ urlpatterns = [
     path('administracion/user/create/', views.UserCreateView.as_view(), name='user_create'),
     path('administracion/users/<int:pk>/update/', views.UserUpdateView.as_view(), name='user_update'),
     path('administracion/users/<int:pk>/delete/', views.UserDeleteView.as_view(), name='user_delete'),
+    # -------------------------------------------------------------------------
+    path("bodeguero/", views.home_bodeguero, name="home_bodeguero"),
+    path("bodeguero/productos/", views.ProductoListView.as_view(), name="bodegueroprod_list"),
+    path('bodeguero/productos/create/', views.ProductoCreateView.as_view(), name='bodegueroprod_create'),
+    path('bodeguero/productos/update/<int:pk>/', views.ProductoUpdateView.as_view(), name='bodegueroprod_update'),
+    path('bodeguero/productos/delete/<int:pk>/', views.ProductoDeleteView.as_view(), name='bodegueroprod_delete'),
+    path("bodeguero/ordenes/", views.OrderListView.as_view(), name="order_list"),
+    path("bodeguero/ordenes/<int:pk>/", views.OrdenDetailView.as_view(), name="orden_detail"),
+    path("bodeguero/ordenes/update/<int:pk>/", views.OrderUpdateView.as_view(), name="orden_update"),
 ]
 
 

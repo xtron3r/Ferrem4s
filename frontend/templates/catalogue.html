@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>BiblioWeb</title>
+    <title>Ferremas</title>
     <!-- CSS -->
     <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">   
@@ -21,99 +21,118 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
-<body style="background-color: rgb(0, 0, 0);">
-    
-    <!-- Header -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#"></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
-                {% if user.is_superuser %}
-                <ul style="margin-right: -250px; margin-left: 50px;" class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold fs-4" href="{% url 'administracion' %}">Administración</a>
-                    </li>
-                </ul>
-                {% elif user.is_authenticated %}
-                <ul style="margin-right: -250px; margin-left: 50px;" class="navbar-nav">
-                    <li class="nav-item">
-                        <span class="navbar-text fw-bold fs-4"><i class="fas fa-user user-icon"></i> {{ user.username }}</span>
-                    </li>
-                </ul>
-                {% endif %}
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold fs-4" aria-current="page" href="{% url 'home_page' %}">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active fw-bold fs-4" href="{% url 'catalogue' %}">Catálogo</a>
-                    </li>
-                    {% if user.is_authenticated %}
-                    <li style="margin-left: 10px;" class="nav-item position-relative">
-                        <a class="nav-link fw-bold fs-4 position-relative" href="{% url 'cart' %}">
-                            <p id="cart-total" class="position-absolute top-2 start-1 translate-middle badge rounded-pill bg-danger">{{cartItems}}</p>
-                            <i class="fas fa-shopping-cart cart-icon"></i> Carrito de Compra
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold fs-4" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold fs-4" href="{% url 'contact' %}">Contacto</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold fs-4" href="{% url 'signin' %}">Iniciar Sesión</a>
-                    </li>
-                    {% endif %}
-                </ul>
+    
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand d-lg-none" href="{% url 'home_page' %}">
+            <img src="../static/assets/img/logoferremas.svg" alt="Logo" style="width: 100px;">
+        </a>
+        {% if user.is_authenticated %}
+            <a class="nav-link d-lg-none me-3" href="#"><i class="bi bi-cart4 fs-3"></i></a>
+        {% endif %}
+    
+        <div class="collapse navbar-collapse" id="navbarMain">
+            <div class="row w-100">
+            
+            <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center justify-content-lg-start align-items-center gap-2 mb-3 mb-lg-0">
+                <a class="navbar-brand d-none d-lg-inline " href="{% url 'home_page' %}">
+                    <img src="../static/assets/img/logoferremas.svg" alt="Logo" style="width: 100px;">
+                </a>      
             </div>
+    
+            <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center align-items-center mb-3 mb-lg-0 gap-3">
+                <a class="nav-link text-black fw-bold" href="#">INICIO</a>
+                <a class="nav-link text-black fw-bold" href="#">QUIENES SOMOS</a>
+                <a class="nav-link text-black fw-bold" href="#">CONTACTO</a>
+            </div>
+    
+            <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center justify-content-lg-end align-items-center gap-lg-4 gap-3">
+                {% if user.is_authenticated %}
+                    {% if user.is_superuser %}
+                        <a class="nav-link text-black" href="{% url 'administracion' %}">ADMIN PANEL</a>
+                    {% else %}
+                    <span class="nav-link text-black">{{ user.username }}</span>
+                {% endif %}
+                    <a class="nav-link text-black" href="{% url 'logout' %}">CERRAR SESIÓN</a>
+                    <a class="nav-link fw-bold fs-4 position-relative" href="{% url 'cart' %}">
+                    <p id="cart-total" class="position-absolute top-2 start-1 translate-middle badge rounded-pill bg-danger">{{cartItems}}</p>
+                    <i class="fas fa-shopping-cart cart-icon"></i>
+                </a>
+                {% else %}
+                    <a class="nav-link text-black fw-bold" href="{% url 'signin' %}">INICIAR SESIÓN</a>
+                {% endif %}
+            </div>
+            </div>
+        </div>
         </div>
     </nav>
     
-    <!-- Content -->
-    <div class="container-md">
-        <div class="row">
-            <div class="col align-content-center" style="display: flex; align-items: center; justify-content: center;">
-                <img src="{% static '/assets/img/logo2.png' %}" id="logo-fluid" alt="" style="max-width: 70vh;">
-            </div>
-        </div>
-
-        <form id="search-form">
-            <input type="text" name="barra-busqueda" id="barra-busqueda" placeholder="Escribe el título o autor del libro">
-            <button type="submit">Buscar</button>
-        </form>
-
-        <div id="result"></div>
+    <div class="container-fluid bg-warning py-3 mb-3">
+        <h4 class="fw-bold text-center">CATEGORÍAS</h4>
+        <ul class="list-unstyled d-flex flex-column flex-md-row justify-content-center gap-4 text-center">
+            <li><a href="{% url 'catalogue' %}" class="text-decoration-none text-black fw-bold {% if not categoria_seleccionada %}text-decoration-underline{% endif %}">Todos</a></li>
+            <li><a href="{% url 'catalogue' %}?categoria=Herramientas" class="text-decoration-none text-black fw-bold {% if categoria_seleccionada == 'Herramientas' %}text-decoration-underline{% endif %}">Herramientas</a></li>
+            <li><a href="{% url 'catalogue' %}?categoria=Materiales de Construcción" class="text-decoration-none text-black fw-bold {% if categoria_seleccionada == 'Materiales de Construcción' %}text-decoration-underline{% endif %}">Materiales de Construcción</a></li>
+            <li><a href="{% url 'catalogue' %}?categoria=Pinturas y Adhesivos" class="text-decoration-none text-black fw-bold {% if categoria_seleccionada == 'Pinturas y Adhesivos' %}text-decoration-underline{% endif %}">Pinturas y Adhesivos</a></li>
+            <li><a href="{% url 'catalogue' %}?categoria=Tornillería" class="text-decoration-none text-black fw-bold {% if categoria_seleccionada == 'Tornillería' %}text-decoration-underline{% endif %}">Tornillería</a></li>
+            <li><a href="{% url 'catalogue' %}?categoria=Seguridad y Protección" class="text-decoration-none text-black fw-bold {% if categoria_seleccionada == 'Seguridad y Protección' %}text-decoration-underline{% endif %}">Seguridad y Protección</a></li>
+        </ul>
     </div>
-    <div class="container-md">
+
+    <div class="container-fluid">
+        <h2 class="text-center my-4">
+            {% if categoria_seleccionada %}
+                {{ categoria_seleccionada }}
+            {% else %}
+                Todos los productos
+            {% endif %}
+        </h2>
+
         <div class="row">
-            <div class="col text-center">
-              <div class="image-container" style="margin: 100px; margin-left: 230px;">
-                {% for libro in libros %}
-                    {% if libro.portadaLibro %}
-                        <a href="{% url 'libro_detail' libro.id %}"><img style="max-width: 300px; width: 200px; max-height: 300px; height: 300px;" src="{{ libro.portadaLibro.url }}" alt="{{ libro.tituloLibro }}"></a>
+            {% for producto in productos %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 w-50">
+                    {% if producto.portadaProducto %}
+                    <div class="text-center">
+                        <img src="{{ producto.portadaProducto.url }}" class="card-img-top w-50" alt="{{ producto.nombreProducto }}">
+                    </div>
+                        
                     {% else %}
-                        N/A
+                    <div class="text-center">
+                        <img src="{% static 'assets/img/default-product.png' %}" class="card-img-top" alt="Producto sin imagen">
+                    </div>
+                        
                     {% endif %}
-                {% endfor %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ producto.nombreProducto }}</h5>
+                        <p class="card-text">PRECIO: ${{ producto.precioProducto }}</p>
+                        <p class="card-text text-muted">MARCA: {{ producto.marcaProducto }}</p>
+
+                        <a href="{% url 'producto_detail' producto.id %}" class="btn btn-primary mt-2">Ver detalles</a>
+                        <button data-producto="{{ producto.id }}" data-action="add" class="btn btn-success add-btn update-cart">Añadir al carrito</button>
+                    </div>
+                </div>
             </div>
-            </div>
+            {% empty %}
+            <p class="text-center">No hay productos en esta categoría.</p>
+            {% endfor %}
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <div>
-            <div>
-                <div>Copyright &copy; BiblioWeb 2024</div>
-            </div>
-        </div>
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <div>&copy; Ferremas 2024</div>
     </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script></script>
+
+    <script>
+        var user = "{{ request.user|default:'AnonymousUser' }}";
+        var csrftoken = '{{ csrf_token }}';
+    </script>
+    <script src="{% static 'javascript/cart.js' %}"></script>
 </body>
 </html>
