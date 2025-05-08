@@ -23,7 +23,6 @@
 
 <body>
     
-    <!-- Header -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
     
@@ -110,13 +109,10 @@
                 </div>
                 <div class="container">
                     <div class="row">
-                        <div class="col-4">
-                            <img src="{% static 'assets/img/shoppay.png' %}" alt="" class="img-thumbnail">
+                        <div class="col-6">
+                            <img src="{% static 'assets/img/webpay.png' %}" alt="" class="img-thumbnail">
                         </div>
-                        <div class="col-4">
-                            <img src="{% static 'assets/img/amazonpay.png' %}" alt="" class="img-thumbnail">
-                        </div>
-                        <div class="col-4">
+                        <div class="col-6">
                             <img src="{% static 'assets/img/paypal.png' %}" alt="" class="img-thumbnail">
                         </div>
                     </div>
@@ -130,16 +126,16 @@
                     <hr>
                     {% for item in items %}
                     <div class="cart-row">
-                        <div style="flex:2"><img style="max-width: 100px; max-height: 150px; width: 100px; height: 150px;" class="row-image" src="{{ item.libro.portadaLibro.url }}" alt=""></div>
+                        <div style="flex:2"><img style="max-width: 100px; max-height: 150px; width: 100px; height: 150px;" class="row-image" src="{{ item.producto.portadaProducto.url }}" alt=""></div>
                         <div style="flex:4">
                             <p>{{item.producto.nombreProducto}}</p>
                         </div>
-                        <div style="flex:1"><p>${{item.producto.precioProducto|floatformat:2}}</p></div>
+                        <div style="flex:1"><p>${{item.producto.precioProducto}}</p></div>
                         <div style="flex:1"><p>x{{item.quantity}}</p></div>
                     </div>
                     {% endfor %}
                     <h5>Items: x{{order.get_cart_items}}</h5>
-                    <h5>Total: ${{order.get_cart_total|floatformat:2}}</h5>
+                    <h5>Total: ${{order.get_cart_total}}</h5>
                     <input id="form-button" class="btn btn-success" type="submit" value="Pagar">
                 </div>
             </div>

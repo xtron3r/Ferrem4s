@@ -209,14 +209,12 @@ def updateItem(request):
     if action == "add":
         orderItem.quantity += 1
     elif action == "remove":
-        orderItem.quantity -= 1
+        if orderItem.quantity > 1:
+            orderItem.quantity -= 1
     elif action == "delete":
-        orderItem.quantity = 0
-
-    if orderItem.quantity <= 0:
         orderItem.delete()
-    else:
-        orderItem.save()
+
+    orderItem.save() 
 
     return JsonResponse("Item was updated", safe=False)
 
@@ -290,12 +288,41 @@ class UserDeleteView(LoginRequiredMixin, DeleteView):
 
 
 # ---- VISTAS BODEGUERO ----
-
+@login_required
 def home_bodeguero(request):
     return render(request, 'bodeguero/home_bodeguero.html')
 
+@login_required
 def bodeguero_pedidos(request):
     return render(request, 'bodeguero/order_list.html')
+
+class ProductoBodegueroListView(LoginRequiredMixin, ListView):
+    model = Producto
+    template_name = "bodeguero/productosb_list.html"
+    context_object_name = "productos"
+
+class ProductoBodegueroCreateView(CreateView):
+    model = Producto
+    form_class = ProductoForm
+    template_name = "bodeguero/productosb_form.html"
+
+    def form_valid(self, form):
+        form.save()
+        return redirect("bodegueroprod_list")
+
+class ProductoBodegueroUpdateView(LoginRequiredMixin, UpdateView):
+    model = Producto
+    fields = [
+        "codigoProducto", "nombreProducto", "marcaProducto", "descripcionProducto",
+        "precioProducto", "portadaProducto", "stockProducto", "categoriaProducto",
+    ]
+    template_name = "bodeguero/productosb_update.html"
+    success_url = reverse_lazy("bodegueroprod_list")
+
+class ProductoBodegueroDeleteView(LoginRequiredMixin, DeleteView):
+    model = Producto
+    template_name = "bodeguero/productosb_confirm_delete.html"
+    success_url = reverse_lazy("bodegueroprod_list")
 
 class OrderListView(ListView):
     model = Order
@@ -323,22 +350,28 @@ class OrderUpdateView(UpdateView):
 # ---- VISTA CONTACTO / EMAIL ----
 
 def contact(request):
+    if request.user.is_authenticated:
+        user = request.user
+        order, created = Order.objects.get_or_create(user=user, complete=False)
+        cartItems = order.get_cart_items
+    else:
+        order = {"get_cart_total": 0, "get_cart_items": 0, "shipping": False}
+        cartItems = order["get_cart_items"]
+
     if request.method == "POST":
         email = request.POST.get("email")
-        subject = "Recuperación Contraseña"
-        email_content = f"Email: {email}\nSolicita recuperación de contraseña."
-
-        send_mail(subject, email_content, email, ["@duocuc.cl"], fail_silently=False)
+        subject = "Mensaje de ayuda desde formulario de contacto"
+        email_content = f"Email: {email}\nSolicita ayuda con el siguiente mensaje:\n{request.POST.get('message')}"
+        send_mail(subject, email_content, email, ["ferr3m4s@gmail.com"], fail_silently=False)
         return HttpResponseRedirect("/contact/enviado/")
 
-    return render(request, "contact.html")
+    return render(request, "contact.html", {"cartItems": cartItems})
 
 def contact_enviado(request):
     return render(request, "contact_enviado.html")
 
 
 # ---- API REST FRAMEWORK ----
-
 class ProductoViewSett(viewsets.ModelViewSet):
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializer

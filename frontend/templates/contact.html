@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>BiblioWeb</title>
+    <title>Ferremas</title>
     <!-- CSS -->
     <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">   
@@ -21,83 +21,91 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
-<body style="background-color: black;">
+<body>
     
-    <!-- Header -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#"></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
-                {% if user.is_superuser %}
-                <ul style="margin-right: -250px; margin-left: 50px;" class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold fs-4" href="{% url 'administracion' %}">Administración</a>
-                    </li>
-                </ul>
-                {% elif user.is_authenticated %}
-                <ul style="margin-right: -250px; margin-left: 50px;" class="navbar-nav">
-                    <li class="nav-item">
-                        <span class="navbar-text fw-bold fs-4"><i class="fas fa-user user-icon"></i> {{ user.username }}</span>
-                    </li>
-                </ul>
+    
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <a class="navbar-brand d-lg-none" href="{% url 'home_page' %}">
+            <img src="../static/assets/img/logoferremas.svg" alt="Logo" style="width: 100px;">
+          </a>
+          {% if user.is_authenticated %}
+          <a class="nav-link d-lg-none me-3" href="#"><i class="bi bi-cart4 fs-3"></i></a>
+          {% endif %}
+    
+          <div class="collapse navbar-collapse" id="navbarMain">
+            <div class="row w-100">
+              
+              <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center justify-content-lg-start align-items-center gap-2 mb-3 mb-lg-0">
+                <a class="navbar-brand d-none d-lg-inline " href="{% url 'home_page' %}">
+                  <img src="../static/assets/img/logoferremas.svg" alt="Logo" style="width: 100px;">
+                </a>      
+              </div>
+    
+              <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center align-items-center mb-3 mb-lg-0 gap-3">
+                <a class="nav-link text-black fw-bold" href="#">INICIO</a>
+                <a class="nav-link text-black fw-bold" href="#">QUIENES SOMOS</a>
+                <a class="nav-link text-black fw-bold" href="{% url 'contact' %}">CONTACTO</a>
+              </div>
+    
+              <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center justify-content-lg-end align-items-center gap-lg-4 gap-3">
+                {% if user.is_authenticated %}
+                  {% if user.is_superuser %}
+                    <a class="nav-link text-black" href="{% url 'administracion' %}">ADMIN PANEL</a>
+                  {% else %}
+                    <span class="nav-link text-black">{{ user.username }}</span>
+                  {% endif %}
+                  <a class="nav-link text-black" href="{% url 'logout' %}">CERRAR SESIÓN</a>
+                  <a class="nav-link fw-bold fs-4 position-relative" href="{% url 'cart' %}">
+                    <p id="cart-total" class="position-absolute top-2 start-1 translate-middle badge rounded-pill bg-danger">{{cartItems}}</p>
+                    <i class="fas fa-shopping-cart cart-icon"></i>
+                  </a>
+                {% else %}
+                  <a class="nav-link text-black fw-bold" href="{% url 'signin' %}">INICIAR SESIÓN</a>
                 {% endif %}
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold fs-4" aria-current="page" href="{% url 'home_page' %}">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold fs-4" href="{% url 'catalogue' %}">Catálogo</a>
-                    </li>
-                    {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold fs-4" href="{% url 'cart' %}"><i class="fas fa-shopping-cart cart-icon"></i> Carrito de Compra</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold fs-4" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link active fw-bold fs-4" href="{% url 'contact' %}">Contacto</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold fs-4" href="{% url 'signin' %}">Iniciar Sesión</a>
-                    </li>
-                    {% endif %}
-                </ul>
+              </div>
             </div>
+          </div>
         </div>
-    </nav>
+      </nav>
+    
 
-    <!-- Content -->
-    <div class="container-md" id="logincontent" style="margin-top: 50px;">
+      <div class="container-md bg-warning" id="logincontent" style="margin-top: 50px;">
         <div class="row">
             <div class="col" id="loginbox">
-                 <!-- Formulario de Login -->
-                 <form id="contactForm" action="{% url 'contact' %}" method="POST">
+                <form id="contactForm" action="{% url 'contact' %}" method="POST">
                     {% csrf_token %}
                     <br>
-                    <h2 style="color: white;">Recuperar contraseña</h2>
-                    <h2 style="color: white;">(Contacto)</h2>
+                    <h2 >Contacto de Ayuda</h2>
+                    <p >¿Tienes alguna duda o problema?</p>
+    
+                    {% if user.is_authenticated %}
+                        <input type="hidden" name="email" value="{{ user.email }}">
+                        <p >Tu mensaje se enviará desde: <strong>{{ user.email }}</strong></p>
+                    {% else %}
+                        <div class="mb-3">
+                            <label for="contactEmail" class="form-label">Correo electronico:</label>
+                            <input type="email" class="form-control" id="contactEmail" name="email" required>
+                            <div class="invalid-feedback">Ingrese un correo electrónico valido.</div>
+                        </div>
+                    {% endif %}
+    
                     <div class="mb-3">
-                        <label style="color: white;" for="contactEmail" class="form-label">Email:</label>
-                        <input type="email" class="form-control" id="contactEmail" name="email" required>
-                        <div id="contactEmailFeedback" class="invalid-feedback">Ingrese un correo electrónico válido</div>
+                        <label for="message" class="form-label">Mensaje:</label>
+                        <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">Enviar Mensaje</button>
-                    <p style="margin-top: 15px;"></p>
+    
+                    <button type="submit" class="btn btn-primary">Enviar</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="text-center py-3">
-            <div>Copyright &copy; BiblioWeb 2024</div>
-        </div>
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <div>&copy; Ferremas 2024</div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
