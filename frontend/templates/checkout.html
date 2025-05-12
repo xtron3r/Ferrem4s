@@ -74,7 +74,8 @@
         <div class="row">
             <div class="col-lg-6">
                 <div class="box-element" id="form-wrapper">
-                    <form id="form">
+                    <form action="{% url 'iniciar_pago' %}" method="post">
+                        {% csrf_token %}
                         <div id="user-info">
                             <br>
                             <h3>Contacto:</h3>
@@ -105,17 +106,6 @@
                             </div>
                         </div>
                     </form>
-                    
-                </div>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-6">
-                            <img src="{% static 'assets/img/webpay.png' %}" alt="" class="img-thumbnail">
-                        </div>
-                        <div class="col-6">
-                            <img src="{% static 'assets/img/paypal.png' %}" alt="" class="img-thumbnail">
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -136,8 +126,19 @@
                     {% endfor %}
                     <h5>Items: x{{order.get_cart_items}}</h5>
                     <h5>Total: ${{order.get_cart_total}}</h5>
-                    <input id="form-button" class="btn btn-success" type="submit" value="Pagar">
+                    <input type="hidden" name="total" value="{{ order.get_cart_total }}">
+                    
+                    <div class="container">
+                    <div class="row">
+                        <div class="col-6">
+                            <img src="{% static 'assets/img/webpay.png' %}" alt="" class="img-thumbnail">
+                            <input id="form-button" class="btn btn-success w-100" type="submit" value="Pagar con Webpay">
+                        </div>  
+                    </div>
+                    
                 </div>
+                </div>
+                
             </div>
         </div>
     </div>

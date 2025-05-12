@@ -219,6 +219,46 @@ def updateItem(request):
     return JsonResponse("Item was updated", safe=False)
 
 
+# ---- VISTAS DE PAGO TRANSBANK ----
+
+import uuid
+from django.http import HttpResponseBadRequest
+from transbank.webpay.webpay_plus.transaction import Transaction
+from transbank.common.options import WebpayOptions
+from transbank.common.integration_type import IntegrationType
+
+options = WebpayOptions(
+    commerce_code='597055555532',
+    api_key='579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C',
+    integration_type=IntegrationType.TEST
+)
+
+tx = Transaction(options)
+
+def iniciar_pago(request):
+    if request.method == 'POST':
+        amount = int(request.POST.get('total'))
+        buy_order = str(uuid.uuid4())[:26]
+        session_id = str(uuid.uuid4())[:61]
+        return_url = request.build_absolute_uri('respuesta_pago')
+
+        response = tx.create(buy_order, session_id, amount, return_url)
+        return redirect(f"{response['url']}?token_ws={response['token']}")
+
+    return render(request, 'checkout.html')
+
+@csrf_exempt
+def respuesta(request):
+    token = request.GET.get('token_ws') or request.POST.get('token_ws')
+    if not token:
+        return HttpResponseBadRequest("Token no recibido")
+
+    response = tx.commit(token)
+
+    if response['status'] == 'AUTHORIZED':
+        return render(request, 'pago_exito.html', {'response': response})
+    else:
+        return render(request, 'pago_error.html', {'response': response})
 
 
 # ---- VISTAS ADMINISTRACIÓN PRODUCTOS ----

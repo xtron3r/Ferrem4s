@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Pago</title>
+</head>
+<body>
+    <h3>Pago exitoso</h3>
+    <p>Gracias por tu compra.</p>
+    <ul>
+        <li>Orden: {{ response.buy_order }}</li>
+        <li>Monto: {{ response.amount }}</li>
+        <li>Fecha: {{ response.transaction_date }}</li>
+        <li>Autorización: {{ response.authorization_code }}</li>
+    </ul>
+</body>
+</html>
