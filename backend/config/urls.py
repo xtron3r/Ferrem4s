@@ -39,7 +39,7 @@ urlpatterns = [
     path("logout/", views.logout_view, name="logout"),
     path("administracion/", views.administracion, name="administracion"),
     path('pago/', views.iniciar_pago, name='iniciar_pago'),
-    path('pago/respuesta/', views.respuesta, name='respuesta_pago'),
+    path('pago/respuesta/', views.respuesta, name='respuesta'),
     # -------------------------------------------------------------------------
     path('administracion/productos/', views.ProductoListView.as_view(), name='productos_list'),
     path('administracion/productos/create/', views.ProductoCreateView.as_view(), name='productos_create'),
