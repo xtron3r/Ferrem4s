@@ -264,7 +264,7 @@ def iniciar_pago(request):
         amount = int(request.POST.get('total'))
         buy_order = str(uuid.uuid4())[:26]
         session_id = str(uuid.uuid4())[:61]
-        return_url = request.build_absolute_uri('respuesta_pago')
+        return_url = request.build_absolute_uri('/pago/respuesta/')
 
         response = tx.create(buy_order, session_id, amount, return_url)
         return redirect(f"{response['url']}?token_ws={response['token']}")
@@ -280,6 +280,13 @@ def respuesta(request):
     response = tx.commit(token)
 
     if response['status'] == 'AUTHORIZED':
+        order = Order.objects.get(user=request.user, complete=False)
+        order.complete = True
+        order.transaction_id = response['buy_order']
+        order.save()
+        order_items = order.orderitem_set.all()
+        for item in order_items:
+            item.delete()
         return render(request, 'pago_exito.html', {'response': response})
     else:
         return render(request, 'pago_error.html', {'response': response})
