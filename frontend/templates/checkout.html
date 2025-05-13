@@ -46,9 +46,9 @@
               </div>
     
               <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center align-items-center mb-3 mb-lg-0 gap-3">
-                <a class="nav-link text-black fw-bold" href="#">INICIO</a>
-                <a class="nav-link text-black fw-bold" href="#">QUIENES SOMOS</a>
-                <a class="nav-link text-black fw-bold" href="#">CONTACTO</a>
+                <a class="nav-link text-black fw-bold" href="{% url 'home_page' %}">INICIO</a>
+                <a class="nav-link text-black fw-bold" href="{% url 'quienes_somos' %}">QUIENES SOMOS</a>
+                <a class="nav-link text-black fw-bold" href="{% url 'contact' %}">CONTACTO</a>
               </div>
     
               <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center justify-content-lg-end align-items-center gap-lg-4 gap-3">
@@ -70,27 +70,28 @@
     </nav>
     
     <!-- Content -->
-    <div class="container-md bg-warning" id="infobook" style="margin-top: 50px;" >
+     <div class="container-md bg-warning" id="infobook" style="margin-top: 50px;">
         <div class="row">
             <div class="col-lg-6">
                 <div class="box-element" id="form-wrapper">
                     <form action="{% url 'iniciar_pago' %}" method="post">
                         {% csrf_token %}
+
                         <div id="user-info">
                             <br>
                             <h3>Contacto:</h3>
                             <hr>
                             <div class="form-field">
-                                <input required class="form-control" type="number" name="telefono" placeholder="Telefono..">
+                                <input required class="form-control" type="number" name="telefono" placeholder="Teléfono..">
                             </div>
                         </div>
 
                         <div id="shipping-info">
                             <br>
-                            <h3>Envio:</h3>
+                            <h3>Envío:</h3>
                             <hr>
                             <div class="form-field">
-                                <input class="form-control" type="text" name="pais" placeholder="Pais..">
+                                <input class="form-control" type="text" name="pais" placeholder="País..">
                             </div>
                             <div class="form-field">
                                 <input class="form-control" type="text" name="ciudad" placeholder="Ciudad..">
@@ -99,49 +100,58 @@
                                 <input class="form-control" type="text" name="comuna" placeholder="Comuna..">
                             </div>
                             <div class="form-field">
-                                <input class="form-control" type="text" name="direccion" placeholder="Direccion..">
+                                <input class="form-control" type="text" name="direccion" placeholder="Dirección..">
                             </div>
                             <div class="form-field">
-                                <input class="form-control" type="text" name="zipcode" placeholder="Zip code..">
+                                <input class="form-control" type="text" name="zipcode" placeholder="Código Postal..">
+                            </div>
+                        </div>
+
+                        <!-- Total oculto -->
+                        <input type="hidden" name="total" value="{{ order.get_cart_total }}">
+
+                        <!-- Botón de pago -->
+                        <div class="container mt-4">
+                            <div class="row">
+                                <div class="col-6">
+                                    <img src="{% static 'assets/img/webpay.png' %}" alt="Webpay" class="img-thumbnail">
+                                    <input id="form-button" class="btn btn-success w-100 mt-2" type="submit" value="Pagar con Webpay">
+                                </div>  
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
 
+            <!-- Resumen del pedido -->
             <div class="col-lg-6">
                 <div class="box-element">
                     <br>
                     <h3>Resumen del pedido:</h3>
                     <hr>
                     {% for item in items %}
-                    <div class="cart-row">
-                        <div style="flex:2"><img style="max-width: 100px; max-height: 150px; width: 100px; height: 150px;" class="row-image" src="{{ item.producto.portadaProducto.url }}" alt=""></div>
-                        <div style="flex:4">
-                            <p>{{item.producto.nombreProducto}}</p>
+                        <div class="cart-row d-flex align-items-center mb-2">
+                            <div style="flex:2">
+                                <img style="max-width: 100px; max-height: 150px;" class="row-image" src="{{ item.producto.portadaProducto.url }}" alt="">
+                            </div>
+                            <div style="flex:4">
+                                <p>{{ item.producto.nombreProducto }}</p>
+                            </div>
+                            <div style="flex:1">
+                                <p>${{ item.producto.precioProducto }}</p>
+                            </div>
+                            <div style="flex:1">
+                                <p>x{{ item.quantity }}</p>
+                            </div>
                         </div>
-                        <div style="flex:1"><p>${{item.producto.precioProducto}}</p></div>
-                        <div style="flex:1"><p>x{{item.quantity}}</p></div>
-                    </div>
                     {% endfor %}
-                    <h5>Items: x{{order.get_cart_items}}</h5>
-                    <h5>Total: ${{order.get_cart_total}}</h5>
-                    <input type="hidden" name="total" value="{{ order.get_cart_total }}">
-                    
-                    <div class="container">
-                    <div class="row">
-                        <div class="col-6">
-                            <img src="{% static 'assets/img/webpay.png' %}" alt="" class="img-thumbnail">
-                            <input id="form-button" class="btn btn-success w-100" type="submit" value="Pagar con Webpay">
-                        </div>  
-                    </div>
-                    
+                    <h5>Items: x{{ order.get_cart_items }}</h5>
+                    <h5>Total: ${{ order.get_cart_total }}</h5>
                 </div>
-                </div>
-                
             </div>
         </div>
     </div>
+
 
     <!-- Footer -->
     <footer>

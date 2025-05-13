@@ -19,6 +19,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
     <!-- Font Awesome (Icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body{background-image: linear-gradient(to bottom, #000000, #361d1e, #67342a, #93542c, #b47d26, #c29422, #ccae1e, #d1c81e, #d9d01a, #e1d714, #eadf0c, #f2e700);
+
+        }
+        html, body {
+            height: 100%;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        main {
+            flex: 1;
+        }
+    </style>
 </head>
 
 <body>
@@ -31,27 +46,29 @@
                 <img src="../static/assets/img/logoferremas.svg" alt="Logo" style="width: 100px;">
             </a>
             {% if user.is_authenticated %}
-                <a class="nav-link d-lg-none me-3" href="#"><i class="bi bi-cart4 fs-3"></i></a>
+            <a class="nav-link d-lg-none me-3" href="#"><i class="bi bi-cart4 fs-3"></i></a>
             {% endif %}
-    
+
             <div class="collapse navbar-collapse" id="navbarMain">
                 <div class="row w-100">
                     <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center justify-content-lg-start align-items-center gap-2 mb-3 mb-lg-0">
-                        <a class="navbar-brand d-none d-lg-inline " href="{% url 'home_page' %}">
+                        <a class="navbar-brand d-none d-lg-inline" href="{% url 'home_page' %}">
                             <img src="../static/assets/img/logoferremas.svg" alt="Logo" style="width: 100px;">
                         </a>      
                     </div>
+
                     <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center align-items-center mb-3 mb-lg-0 gap-3">
                         <a class="nav-link text-black fw-bold" href="{% url 'home_page' %}">INICIO</a>
                         <a class="nav-link text-black fw-bold" href="{% url 'quienes_somos' %}">QUIENES SOMOS</a>
                         <a class="nav-link text-black fw-bold" href="{% url 'contact' %}">CONTACTO</a>
                     </div>
+
                     <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center justify-content-lg-end align-items-center gap-lg-4 gap-3">
                         {% if user.is_authenticated %}
                             {% if user.is_superuser %}
                                 <a class="nav-link text-black" href="{% url 'administracion' %}">ADMIN PANEL</a>
                             {% else %}
-                            <span class="nav-link text-black">{{ user.username }}</span>
+                                <span class="nav-link text-black">{{ user.username }}</span>
                             {% endif %}
                             <a class="nav-link text-black" href="{% url 'logout' %}">CERRAR SESIÓN</a>
                             <a class="nav-link fw-bold fs-4 position-relative" href="{% url 'cart' %}">
@@ -66,60 +83,36 @@
             </div>
         </div>
     </nav>
-    
-    <div class="container-fluid bg-warning py-3 mb-3">
-        <h4 class="fw-bold text-center">CATEGORÍAS</h4>
-        <ul class="list-unstyled d-flex flex-column flex-md-row justify-content-center gap-4 text-center">
-            <li><a href="{% url 'catalogue' %}" class="text-decoration-none text-black fw-bold {% if not categoria_seleccionada %}text-decoration-underline{% endif %}">Todos</a></li>
-            <li><a href="{% url 'catalogue' %}?categoria=herramientas" class="text-decoration-none text-black fw-bold {% if categoria_seleccionada == 'herramientas' %}text-decoration-underline{% endif %}">Herramientas</a></li>
-            <li><a href="{% url 'catalogue' %}?categoria=materiales_construccion" class="text-decoration-none text-black fw-bold {% if categoria_seleccionada == 'materiales_construccion' %}text-decoration-underline{% endif %}">Materiales de Construcción</a></li>
-            <li><a href="{% url 'catalogue' %}?categoria=pinturas_adesivos" class="text-decoration-none text-black fw-bold {% if categoria_seleccionada == 'pinturas_adesivos' %}text-decoration-underline{% endif %}">Pinturas y Adhesivos</a></li>
-            <li><a href="{% url 'catalogue' %}?categoria=tornilleria" class="text-decoration-none text-black fw-bold {% if categoria_seleccionada == 'tornilleria' %}text-decoration-underline{% endif %}">Tornillería</a></li>
-            <li><a href="{% url 'catalogue' %}?categoria=seguridad_proteccion" class="text-decoration-none text-black fw-bold {% if categoria_seleccionada == 'seguridad_proteccion' %}text-decoration-underline{% endif %}">Seguridad y Protección</a></li>
-        </ul>
-    </div>
 
-    <div class="container-fluid">
-       
-
-        <div class="row">
-            {% for producto in productos %}
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 w-50">
-                    {% if producto.portadaProducto %}
-                    <div class="text-center">
-                        <img src="{{ producto.portadaProducto.url }}" class="card-img-top w-50" alt="{{ producto.nombreProducto }}">
-                    </div>
-                    {% else %}
-                    <div class="text-center">
-                        <img src="{% static 'assets/img/default-product.png' %}" class="card-img-top" alt="Producto sin imagen">
-                    </div>
-                    {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{ producto.nombreProducto }}</h5>
-                        <p class="card-text">PRECIO: ${{ producto.precioProducto }}</p>
-                        <p class="card-text text-muted">MARCA: {{ producto.marcaProducto }}</p>
-                        <a href="{% url 'producto_detail' producto.id %}" class="btn btn-primary mt-2">Ver detalles</a>
-                        <button data-producto="{{ producto.id }}" data-action="add" class="btn btn-success add-btn update-cart">Añadir al carrito</button>
-                    </div>
+    <main>
+        <div class="container-md bg-warning" id="quienesSomosContent" style="margin-top: 50px;">
+            <div class="row">
+                <div class="col" id="quienesSomosBox">
+                    <br>
+                    <h2>Quiénes Somos</h2>
+                    <p>
+                        <strong>FERREMAS</strong> es una distribuidora de productos de ferretería y construcción que ha operado en Chile desde la década de los 80.
+                        Gracias a su compromiso con la calidad y el servicio, ha logrado un crecimiento sostenido durante las últimas décadas, 
+                        abasteciendo a diversas ferreterías y empresas constructoras a lo largo del país.
+                    </p>
+                    <p>
+                        Durante la pandemia de COVID-19, FERREMAS enfrentó desafíos importantes que impulsaron una transformación en su modelo de negocio.
+                        Pasó de estar centrado en ventas físicas a adoptar un modelo híbrido, combinando atención en tiendas con una robusta plataforma de ventas en línea.
+                    </p>
+                    <p>
+                        Hoy en día, seguimos comprometidos con la excelencia, ofreciendo productos de calidad y atención personalizada tanto presencial como digital.
+                    </p>
                 </div>
             </div>
-            {% empty %}
-            <p class="text-center">No hay productos en esta categoría.</p>
-            {% endfor %}
         </div>
-    </div>
+    </main>
 
     <footer class="bg-dark text-white text-center py-3 mt-5">
         <div>&copy; Ferremas 2024</div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        var user = "{{ request.user|default:'AnonymousUser' }}";
-        var csrftoken = '{{ csrf_token }}';
-    </script>
-    <script src="{% static 'javascript/cart.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.2/dist/jquery.validate.min.js"></script>
 </body>
 </html>

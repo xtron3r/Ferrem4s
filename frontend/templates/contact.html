@@ -19,98 +19,105 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
     <!-- Font Awesome (Icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+       body{background-image: linear-gradient(to bottom, #000000, #361d1e, #67342a, #93542c, #b47d26, #c29422, #ccae1e, #d1c81e, #d9d01a, #e1d714, #eadf0c, #f2e700);
+
+}
+    </style>
 </head>
 
-<body>
-    
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-    
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <a class="navbar-brand d-lg-none" href="{% url 'home_page' %}">
-            <img src="../static/assets/img/logoferremas.svg" alt="Logo" style="width: 100px;">
-          </a>
-          {% if user.is_authenticated %}
-          <a class="nav-link d-lg-none me-3" href="#"><i class="bi bi-cart4 fs-3"></i></a>
-          {% endif %}
-    
-          <div class="collapse navbar-collapse" id="navbarMain">
-            <div class="row w-100">
-              
-              <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center justify-content-lg-start align-items-center gap-2 mb-3 mb-lg-0">
-                <a class="navbar-brand d-none d-lg-inline " href="{% url 'home_page' %}">
-                  <img src="../static/assets/img/logoferremas.svg" alt="Logo" style="width: 100px;">
-                </a>      
-              </div>
-    
-              <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center align-items-center mb-3 mb-lg-0 gap-3">
-                <a class="nav-link text-black fw-bold" href="#">INICIO</a>
-                <a class="nav-link text-black fw-bold" href="#">QUIENES SOMOS</a>
-                <a class="nav-link text-black fw-bold" href="{% url 'contact' %}">CONTACTO</a>
-              </div>
-    
-              <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center justify-content-lg-end align-items-center gap-lg-4 gap-3">
-                {% if user.is_authenticated %}
-                  {% if user.is_superuser %}
-                    <a class="nav-link text-black" href="{% url 'administracion' %}">ADMIN PANEL</a>
-                  {% else %}
-                    <span class="nav-link text-black">{{ user.username }}</span>
-                  {% endif %}
-                  <a class="nav-link text-black" href="{% url 'logout' %}">CERRAR SESIÓN</a>
-                  <a class="nav-link fw-bold fs-4 position-relative" href="{% url 'cart' %}">
-                    <p id="cart-total" class="position-absolute top-2 start-1 translate-middle badge rounded-pill bg-danger">{{cartItems}}</p>
-                    <i class="fas fa-shopping-cart cart-icon"></i>
-                  </a>
-                {% else %}
-                  <a class="nav-link text-black fw-bold" href="{% url 'signin' %}">INICIAR SESIÓN</a>
-                {% endif %}
+<body class="d-flex flex-column min-vh-100">
+    <!-- Contenedor principal que se expande -->
+    <div class="flex-grow-1">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+        
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <a class="navbar-brand d-lg-none" href="{% url 'home_page' %}">
+                <img src="../static/assets/img/logoferremas.svg" alt="Logo" style="width: 100px;">
+              </a>
+              {% if user.is_authenticated %}
+              <a class="nav-link d-lg-none me-3" href="#"><i class="bi bi-cart4 fs-3"></i></a>
+              {% endif %}
+        
+              <div class="collapse navbar-collapse" id="navbarMain">
+                <div class="row w-100">
+                  
+                  <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center justify-content-lg-start align-items-center gap-2 mb-3 mb-lg-0">
+                    <a class="navbar-brand d-none d-lg-inline " href="{% url 'home_page' %}">
+                      <img src="../static/assets/img/logoferremas.svg" alt="Logo" style="width: 100px;">
+                    </a>      
+                  </div>
+        
+                  <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center align-items-center mb-3 mb-lg-0 gap-3">
+                    <a class="nav-link text-black fw-bold" href="{% url 'home_page' %}">INICIO</a>
+                    <a class="nav-link text-black fw-bold" href="{% url 'quienes_somos' %}">QUIENES SOMOS</a>
+                    <a class="nav-link text-black fw-bold" href="{% url 'contact' %}">CONTACTO</a>
+                  </div>
+        
+                  <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center justify-content-lg-end align-items-center gap-lg-4 gap-3">
+                    {% if user.is_authenticated %}
+                      {% if user.is_superuser %}
+                        <a class="nav-link text-black" href="{% url 'administracion' %}">ADMIN PANEL</a>
+                      {% else %}
+                        <span class="nav-link text-black">{{ user.username }}</span>
+                      {% endif %}
+                      <a class="nav-link text-black" href="{% url 'logout' %}">CERRAR SESIÓN</a>
+                      <a class="nav-link fw-bold fs-4 position-relative" href="{% url 'cart' %}">
+                        <p id="cart-total" class="position-absolute top-2 start-1 translate-middle badge rounded-pill bg-danger">{{cartItems}}</p>
+                        <i class="fas fa-shopping-cart cart-icon"></i>
+                      </a>
+                    {% else %}
+                      <a class="nav-link text-black fw-bold" href="{% url 'signin' %}">INICIAR SESIÓN</a>
+                    {% endif %}
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </nav>
+        </nav>
     
-
-      <div class="container-md bg-warning" id="logincontent" style="margin-top: 50px;">
-        <div class="row">
-            <div class="col" id="loginbox">
-                <form id="contactForm" action="{% url 'contact' %}" method="POST">
-                    {% csrf_token %}
-                    <br>
-                    <h2 >Contacto de Ayuda</h2>
-                    <p >¿Tienes alguna duda o problema?</p>
-    
-                    {% if user.is_authenticated %}
-                        <input type="hidden" name="email" value="{{ user.email }}">
-                        <p >Tu mensaje se enviará desde: <strong>{{ user.email }}</strong></p>
-                    {% else %}
+        <div class="container-md bg-warning" id="logincontent" style="margin-top: 50px;">
+            <div class="row">
+                <div class="col" id="loginbox">
+                    <form id="contactForm" action="{% url 'contact' %}" method="POST">
+                        {% csrf_token %}
+                        <br>
+                        <h2>Contacto de Ayuda</h2>
+                        <p>¿Tienes alguna duda o problema?</p>
+        
+                        {% if user.is_authenticated %}
+                            <input type="hidden" name="email" value="{{ user.email }}">
+                            <p>Tu mensaje se enviará desde: <strong>{{ user.email }}</strong></p>
+                        {% else %}
+                            <div class="mb-3">
+                                <label for="contactEmail" class="form-label">Correo electronico:</label>
+                                <input type="email" class="form-control" id="contactEmail" name="email" required>
+                                <div class="invalid-feedback">Ingrese un correo electrónico valido.</div>
+                            </div>
+                        {% endif %}
+        
                         <div class="mb-3">
-                            <label for="contactEmail" class="form-label">Correo electronico:</label>
-                            <input type="email" class="form-control" id="contactEmail" name="email" required>
-                            <div class="invalid-feedback">Ingrese un correo electrónico valido.</div>
+                            <label for="message" class="form-label">Mensaje:</label>
+                            <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
                         </div>
-                    {% endif %}
-    
-                    <div class="mb-3">
-                        <label for="message" class="form-label">Mensaje:</label>
-                        <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
-                    </div>
-    
-                    <button type="submit" class="btn btn-primary">Enviar</button>
-                </form>
+        
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
-    <footer class="bg-dark text-white text-center py-3 mt-5">
+    <!-- Footer fijo abajo -->
+    <footer class="bg-dark text-white text-center py-3 mt-auto">
         <div>&copy; Ferremas 2024</div>
     </footer>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.2/dist/jquery.validate.min.js"></script>
-    
 </body>
 </html>

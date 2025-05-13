@@ -105,8 +105,10 @@ def home_page(request):
 
     context = {"items": items, "order": order, "cartItems": cartItems}
     return render(request, "home-page.html", context)
+# ---- quienes somos  ----
 
-
+def quienes_somos(request):
+    return render(request, 'quienes-somos.html')
 # ---- VISTAS DE CATÁLOGO Y PRODUCTOS ----
 
 class catalogueListView(ListView):
@@ -132,6 +134,7 @@ class catalogueListView(ListView):
             items = []
             order = {"get_cart_total": 0, "get_cart_items": 0, "shipping": False}
             cartItems = order["get_cart_items"]
+            
 
         context.update({
             "items": items,
@@ -166,7 +169,13 @@ def cart(request):
     if request.user.is_authenticated:
         user = request.user
         order, created = Order.objects.get_or_create(user=user, complete=False)
-        items = order.orderitem_set.all()
+
+        # Eliminar automáticamente los ítems sin producto
+        order.orderitem_set.filter(producto__isnull=True).delete()
+
+        # Filtrar solo los ítems con producto válido
+        items = order.orderitem_set.filter(producto__isnull=False)
+
         cartItems = order.get_cart_items
     else:
         items = []
@@ -204,6 +213,7 @@ def updateItem(request):
     producto = Producto.objects.get(id=productoId)
     order, created = Order.objects.get_or_create(user=user, complete=False)
 
+    # Obtener el OrderItem correspondiente
     orderItem, created = OrderItem.objects.get_or_create(order=order, producto=producto)
 
     if action == "add":
@@ -213,10 +223,24 @@ def updateItem(request):
             orderItem.quantity -= 1
     elif action == "delete":
         orderItem.delete()
+        # No es necesario hacer save después de eliminar el item
 
-    orderItem.save() 
+    # Solo guarda si el item fue modificado
+    if action != "delete":
+        orderItem.save()
 
-    return JsonResponse("Item was updated", safe=False)
+    # Obtener el nuevo estado del carrito para enviar como respuesta
+    cart_items = order.orderitem_set.all()
+    cart_total = order.get_cart_total
+    cart_items_count = order.get_cart_items
+
+    response_data = {
+        'cartItems': cart_items_count,
+        'cartTotal': cart_total,
+        'items': [{'producto': item.producto.name, 'quantity': item.quantity, 'total': item.get_total} for item in cart_items]
+    }
+
+    return JsonResponse(response_data, safe=False)
 
 
 # ---- VISTAS DE PAGO TRANSBANK ----

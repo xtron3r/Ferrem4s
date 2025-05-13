@@ -39,23 +39,22 @@ class Order(models.Model):
 
     @property
     def get_cart_total(self):
-        orderitems = self.orderitem_set.all()
+        orderitems = self.orderitem_set.filter(producto__isnull=False)
         total = sum([item.get_total for item in orderitems])
         return total
 
     @property
     def get_cart_items(self):
-        orderitems = self.orderitem_set.all()
+        orderitems = self.orderitem_set.filter(producto__isnull=False)
         total = sum([item.quantity for item in orderitems])
         return total
-
     class Meta:
         verbose_name = "orden"
         verbose_name_plural = "ordenes"
 
 
 class OrderItem(models.Model):
-    producto = models.ForeignKey(Producto, on_delete=models.SET_NULL, null=True)
+    producto = models.ForeignKey(Producto, on_delete=models.SET_NULL, null=True,blank=True)
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
     quantity = models.IntegerField(default=0, null=True, blank=True)
     date_added = models.DateTimeField(auto_now_add=True)

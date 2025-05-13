@@ -18,34 +18,41 @@
 </head>
 
 <body>
+  <!-- NAVBAR PRINCIPAL -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
+      <a class="navbar-brand d-lg-none" href="{% url 'home_page' %}">
+        <img src="../static/assets/img/logoferremas.svg" alt="Logo" style="width: 100px;">
+      </a>
+      
+      {% if user.is_authenticated %}
+      <a class="nav-link d-lg-none me-3" href="{% url 'cart' %}">
+        <i class="bi bi-cart4 fs-3"></i>
+        <span class="position-absolute top-2 start-1 translate-middle badge rounded-pill bg-danger">{{cartItems}}</span>
+      </a>
+      {% endif %}
 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <a class="navbar-brand d-lg-none" href="{% url 'home_page' %}">
-        <img src="../static/assets/img/logoferremas.svg" alt="Logo" style="width: 100px;">
-      </a>
-      {% if user.is_authenticated %}
-      <a class="nav-link d-lg-none me-3" href="#"><i class="bi bi-cart4 fs-3"></i></a>
-      {% endif %}
 
       <div class="collapse navbar-collapse" id="navbarMain">
         <div class="row w-100">
-          
+          <!-- LOGO PARA VERSIÓN DESKTOP -->
           <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center justify-content-lg-start align-items-center gap-2 mb-3 mb-lg-0">
-            <a class="navbar-brand d-none d-lg-inline " href="{% url 'home_page' %}">
+            <a class="navbar-brand d-none d-lg-inline" href="{% url 'home_page' %}">
               <img src="../static/assets/img/logoferremas.svg" alt="Logo" style="width: 100px;">
             </a>      
           </div>
 
+          <!-- ENLACES DE NAVEGACIÓN -->
           <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center align-items-center mb-3 mb-lg-0 gap-3">
-            <a class="nav-link text-black fw-bold" href="#">INICIO</a>
-            <a class="nav-link text-black fw-bold" href="#">QUIENES SOMOS</a>
+            <a class="nav-link text-black fw-bold" href="{% url 'home_page' %}">INICIO</a>
+            <a class="nav-link text-black fw-bold" href="{% url 'quienes_somos' %}">QUIENES SOMOS</a>
             <a class="nav-link text-black fw-bold" href="{% url 'contact' %}">CONTACTO</a>
           </div>
 
+          <!-- ÁREA DE USUARIO Y CARRITO -->
           <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center justify-content-lg-end align-items-center gap-lg-4 gap-3">
             {% if user.is_authenticated %}
               {% if user.is_superuser %}
@@ -55,7 +62,7 @@
               {% endif %}
               <a class="nav-link text-black" href="{% url 'logout' %}">CERRAR SESIÓN</a>
               <a class="nav-link fw-bold fs-4 position-relative" href="{% url 'cart' %}">
-                <p id="cart-total" class="position-absolute top-2 start-1 translate-middle badge rounded-pill bg-danger">{{cartItems}}</p>
+                <p id="cart-total" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{cartItems}}</p>
                 <i class="fas fa-shopping-cart cart-icon"></i>
               </a>
             {% else %}
@@ -79,19 +86,21 @@
     </ul>
   </div>
 
+  <!-- BANNER DE COMPRA FÁCIL -->
   <div class="barra-negra">
     <div class="barra">
       <div class="clear bg-warning">
-        <p class="text-black fs-5"><strong class="text-black">🔧 COMPRA FÁCIL</strong>! Haz tu pedido online y <strong class="text-black">recíbelo en casa o retíralo en tienda</strong>, ¡desde un día hábil!</p>
+        <p class="text-black fs-5 mb-0 py-2"><strong class="text-black">🔧 COMPRA FÁCIL</strong>! Haz tu pedido online y <strong class="text-black">recíbelo en casa o retíralo en tienda</strong>, ¡desde un día hábil!</p>
       </div>
     </div>
   </div>
 
-  <div class="container-carousel centrar">
+  <!-- CARRUSEL PRINCIPAL -->
+  <div class="container-carousel centrar my-4">
     <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
       <div class="carousel-inner">
         <div class="carousel-item active">
-          <img src="../static/assets/img/banner.svg" class=" d-block img-fluid w-100" style="height: 320px; object-fit: cover;" alt="banner">
+          <img src="../static/assets/img/banner.svg" class="d-block img-fluid w-100" style="height: 320px; object-fit: cover;" alt="banner">
         </div>
         <div class="carousel-item">
           <img src="../static/assets/img/banner2.jpeg" class="d-block w-100 img-fluid" style="height: 320px; object-fit: cover;" alt="banner2">
@@ -109,10 +118,11 @@
     </div>
   </div>
 
+  <!-- SECCIÓN DE MÁS VENDIDOS -->
   <div class="barra-negra mt-4">
     <div class="barra">
       <div class="clear bg-warning">
-        <p class="text-black fs-2"><strong>PRODUCTOS MÁS VENDIDOS</strong></p>
+        <p class="text-black fs-2 mb-0 py-2 text-center"><strong>PRODUCTOS MÁS VENDIDOS</strong></p>
       </div>
     </div>
   </div>
@@ -120,43 +130,42 @@
   <div class="container py-4">
     <div id="carouselmasvendido" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
       <div class="carousel-inner">
-        
         <!-- Slide 1 -->
         <div class="carousel-item active">
           <div class="row justify-content-center">
-            <div class="col-md-4">
-              <div class="card text-center border-0">
-                <img src="../static/assets/img/taladro3.jpg" class="card-img-top" style="height: 400px; " alt="Producto 1">
+            <div class="col-12 col-md-4 mb-4 mb-md-0">
+              <div class="card text-center border-0 h-100">
+                <img src="../static/assets/img/taladro3.jpg" class="card-img-top" style="height: 300px; object-fit: contain;" alt="Producto 1">
                 <div class="card-body">
                   <h5 class="card-title">Taladro Stanley 650W</h5>
                   <p class="mb-1"><small class="text-muted text-decoration-line-through">$89.990</small> <span class="text-danger fw-bold ms-2">$69.990</span></p>
-                  <button class="btn btn-outline-primary btn-sm">Ver producto</button>
+                  <button class="btn btn-outline-primary btn-sm mt-2">Ver producto</button>
                 </div>
               </div>
             </div>
             <div class="col-md-4 d-none d-md-block">
-              <div class="card text-center border-0">
-                <img src="../static/assets/img/taladro2.png" class="card-img-top" style="height: 400px;" alt="Producto 2">
+              <div class="card text-center border-0 h-100">
+                <img src="../static/assets/img/taladro2.png" class="card-img-top" style="height: 300px; object-fit: contain;" alt="Producto 2">
                 <div class="card-body">
                   <h5 class="card-title">Sierra Circular Makita</h5>
                   <p class="mb-1"><small class="text-muted text-decoration-line-through">$149.990</small> <span class="text-danger fw-bold ms-2">$119.990</span></p>
-                  <button class="btn btn-outline-primary btn-sm">Ver producto</button>
+                  <button class="btn btn-outline-primary btn-sm mt-2">Ver producto</button>
                 </div>
               </div>
             </div>
             <div class="col-md-4 d-none d-md-block">
-              <div class="card text-center border-0">
-                <img src="../static/assets/img/taladro.png" class="card-img-top" style="height: 400px; " alt="Producto 3">
+              <div class="card text-center border-0 h-100">
+                <img src="../static/assets/img/taladro.png" class="card-img-top" style="height: 300px; object-fit: contain;" alt="Producto 3">
                 <div class="card-body">
                   <h5 class="card-title">Sellador Sika Multiusos</h5>
                   <p class="mb-1"><small class="text-muted text-decoration-line-through">$9.990</small> <span class="text-danger fw-bold ms-2">$6.990</span></p>
-                  <button class="btn btn-outline-primary btn-sm">Ver producto</button>
+                  <button class="btn btn-outline-primary btn-sm mt-2">Ver producto</button>
                 </div>
               </div>
             </div>
           </div>
         </div>
-              <!-- aqui van mas-->
+        <!-- Aquí se pueden agregar más slides -->
       </div>
 
       <button class="carousel-control-prev" type="button" data-bs-target="#carouselmasvendido" data-bs-slide="prev">
@@ -168,25 +177,32 @@
     </div>
   </div>
 
+  <!-- SECCIÓN DE MARCAS -->
   <div class="barra-negra mt-4">
     <div class="barra">
       <div class="clear bg-warning">
-        <p class="text-black fs-2"><strong>NUESTRAS MARCAS</strong></p>
+        <p class="text-black fs-2 mb-0 py-2 text-center"><strong>NUESTRAS MARCAS</strong></p>
       </div>
     </div>
   </div>
 
-  <div class="container-carousel centrar w-50 h-50">
+  <div class="container my-4">
     <div id="carouselmarcas" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
       <div class="carousel-inner">
         <div class="carousel-item active">
-          <img src="../static/assets/img/stanley-tools-vector-logo.png" class=" d-block  w-100 h-100" style=" object-fit: cover;" alt="banner">
+          <div class="d-flex justify-content-center">
+            <img src="../static/assets/img/stanley-tools-vector-logo.png" class="d-block" style="height: 150px; object-fit: contain;" alt="Stanley">
+          </div>
         </div>
         <div class="carousel-item">
-          <img src="../static/assets/img/Makita_Logo.svg.png" class="d-block w-100 h-100 " style=" object-fit: cover;" alt="banner2">
+          <div class="d-flex justify-content-center">
+            <img src="../static/assets/img/Makita_Logo.svg.png" class="d-block" style="height: 150px; object-fit: contain;" alt="Makita">
+          </div>
         </div>
         <div class="carousel-item">
-          <img src="../static/assets/img/sika-group-vector-logo.png" class="d-block w-100 h-100 " style=" object-fit: cover;" alt="banner3">
+          <div class="d-flex justify-content-center">
+            <img src="../static/assets/img/sika-group-vector-logo.png" class="d-block" style="height: 150px; object-fit: contain;" alt="Sika">
+          </div>
         </div>
       </div>
       <button class="carousel-control-prev" type="button" data-bs-target="#carouselmarcas" data-bs-slide="prev">
@@ -198,55 +214,61 @@
     </div>
   </div>
 
-  <div class="mt-3">
-    <img src="../static/assets/img/banner-ferremas.png" alt="banner ferremas" class="img-fluid p-0 m-0">
+  <!-- BANNER FERREMAS -->
+  <div class="container-fluid p-0">
+    <img src="../static/assets/img/banner-ferremas.png" alt="banner ferremas" class="img-fluid w-100">
   </div>
 
+  <!-- BARRA DE CATEGORÍAS -->
   <div class="barra-negra mt-5">
     <div class="barra">
       <div class="clear bg-warning">
-        <p class="text-black fs-2"><strong>CATEGORIAS</strong></p>
+        <p class="text-black fs-2 mb-0 py-2 text-center"><strong>CATEGORIAS</strong></p>
       </div>
     </div>
   </div>
 
-  <div class="container-fluid">
+  <!-- CATEGORÍAS ENLACES -->
+  <div class="container-fluid py-4">
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCategories" aria-controls="navbarCategories" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <p class="d-sm-none">CATEGORIAS</p>
-        <div class="collapse navbar-collapse justify-content-center p-3" id="navbarNav">
-          <ul class="navbar-nav gap-3">
-            <li class="nav-item"><a class="nav-link active text-black bg-warning rounded-3" href="#">Herramientas</a></li>
-            <li class="nav-item"><a class="nav-link text-black bg-warning rounded-3" href="#">Materiales de Construcción</a></li>
-            <li class="nav-item"><a class="nav-link text-black bg-warning rounded-3" href="#">Pinturas y Adhesivos</a></li>
-            <li class="nav-item"><a class="nav-link text-black bg-warning rounded-3" href="#">Tornillería</a></li>
-            <li class="nav-item"><a class="nav-link text-black bg-warning rounded-3" href="#">Seguridad y Protección</a></li>
+        <p class="d-sm-none mb-0">CATEGORIAS</p>
+        <div class="collapse navbar-collapse justify-content-center p-3" id="navbarCategories">
+          <ul class="navbar-nav gap-3 flex-wrap">
+            <li class="nav-item"><a class="nav-link active text-black bg-warning rounded-3 px-3 py-2" href="#">Herramientas</a></li>
+            <li class="nav-item"><a class="nav-link text-black bg-warning rounded-3 px-3 py-2" href="#">Materiales de Construcción</a></li>
+            <li class="nav-item"><a class="nav-link text-black bg-warning rounded-3 px-3 py-2" href="#">Pinturas y Adhesivos</a></li>
+            <li class="nav-item"><a class="nav-link text-black bg-warning rounded-3 px-3 py-2" href="#">Tornillería</a></li>
+            <li class="nav-item"><a class="nav-link text-black bg-warning rounded-3 px-3 py-2" href="#">Seguridad y Protección</a></li>
           </ul>
         </div>
       </div>
     </nav>
   </div>
 
-  <!-- Footer -->
+  <!-- FOOTER -->
   <footer class="footer mt-5 bg-black">
     <div class="conteiner-footer">
       <div class="footer-row">
         <div class="footer-links">
           <h4>SERVICIO Y SOPORTE</h4>
-          <li><a href="#">Preguntas frecuentes</a></li>
-          <li><a href="#">Términos y condiciones</a></li>
-          <li><a href="#">Políticas de Devolución</a></li>
-          <li><a href="#">Tiendas</a></li>
+          <ul class="list-unstyled">
+            <li><a href="#">Preguntas frecuentes</a></li>
+            <li><a href="#">Términos y condiciones</a></li>
+            <li><a href="#">Políticas de Devolución</a></li>
+            <li><a href="#">Tiendas</a></li>
+          </ul>
         </div>
        
         <div class="footer-links">
           <h4>INFORMACIÓN DE LA EMPRESA</h4>
-          <li><a href="#">Acerca de FerreMas</a></li>
-          <li><a href="#">Trabaja en Nuestro Equipo</a></li>
-          
+          <ul class="list-unstyled">
+            <li><a href="#">Acerca de FerreMas</a></li>
+            <li><a href="#">Trabaja en Nuestro Equipo</a></li>
+          </ul>
         </div>
         <div class="footer-links">
           <h4>SÍGUENOS</h4>

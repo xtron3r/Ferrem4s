@@ -40,6 +40,8 @@ urlpatterns = [
     path("administracion/", views.administracion, name="administracion"),
     path('pago/', views.iniciar_pago, name='iniciar_pago'),
     path('pago/respuesta/', views.respuesta, name='respuesta_pago'),
+    path('quienes-somos/', views.quienes_somos, name='quienes_somos'),
+    
     # -------------------------------------------------------------------------
     path('administracion/productos/', views.ProductoListView.as_view(), name='productos_list'),
     path('administracion/productos/create/', views.ProductoCreateView.as_view(), name='productos_create'),
