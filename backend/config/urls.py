@@ -41,7 +41,6 @@ urlpatterns = [
     path('pago/', views.iniciar_pago, name='iniciar_pago'),
     path('pago/respuesta/', views.respuesta, name='respuesta_pago'),
     path("quienes_somos/", views.quienes_somos, name="quienes_somos"),
-
     # -------------------------------------------------------------------------
     path('administracion/productos/', views.ProductoListView.as_view(), name='productos_list'),
     path('administracion/productos/create/', views.ProductoCreateView.as_view(), name='productos_create'),
@@ -62,7 +61,6 @@ urlpatterns = [
     path("bodeguero/ordenes/<int:pk>/", views.OrdenDetailView.as_view(), name="orden_detail"),
     path("bodeguero/ordenes/update/<int:pk>/", views.OrderUpdateView.as_view(), name="orden_update"),
 ]
-
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

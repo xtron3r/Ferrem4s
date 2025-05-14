@@ -22,7 +22,7 @@
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
       <a class="navbar-brand d-lg-none" href="{% url 'home_page' %}">
-        <img src="../static/assets/img/logoferremas.svg" alt="Logo" style="width: 100px;">
+        <img src="{% static 'assets/img/logoferremas.svg' %}" alt="Logo" style="width: 100px;">
       </a>
       
       {% if user.is_authenticated %}
@@ -41,7 +41,7 @@
           <!-- LOGO PARA VERSIÓN DESKTOP -->
           <div class="col-12 col-lg-4 d-flex flex-column flex-lg-row justify-content-center justify-content-lg-start align-items-center gap-2 mb-3 mb-lg-0">
             <a class="navbar-brand d-none d-lg-inline" href="{% url 'home_page' %}">
-              <img src="../static/assets/img/logoferremas.svg" alt="Logo" style="width: 100px;">
+              <img src="{% static 'assets/img/logoferremas.svg' %}" alt="Logo" style="width: 100px;">
             </a>      
           </div>
 
@@ -78,11 +78,12 @@
   <div class="container-fluid bg-warning py-3 mb-3">
     <h4 class="fw-bold text-center">CATEGORIAS</h4>
     <ul class="list-unstyled d-flex flex-column flex-md-row justify-content-center gap-4 text-center">
-      <li><a href="{% url 'catalogue' %}?categoria=Herramientas" class="text-decoration-none text-black fw-bold">Herramientas</a></li>
-      <li><a href="{% url 'catalogue' %}?categoria=Materiales de Construcción" class="text-decoration-none text-black fw-bold">Materiales de Construcción</a></li>
-      <li><a href="{% url 'catalogue' %}?categoria=Pinturas y Adhesivos" class="text-decoration-none text-black fw-bold">Pinturas y Adhesivos</a></li>
-      <li><a href="{% url 'catalogue' %}?categoria=Tornillería" class="text-decoration-none text-black fw-bold">Tornillería</a></li>
-      <li><a href="{% url 'catalogue' %}?categoria=Seguridad y Protección" class="text-decoration-none text-black fw-bold">Seguridad y Protección</a></li>
+      <li><a href="{% url 'catalogue' %}" class="text-decoration-none text-black fw-bold {% if not categoria_seleccionada %}text-decoration-underline{% endif %}">Todos</a></li>
+            <li><a href="{% url 'catalogue' %}?categoria=herramientas" class="text-decoration-none text-black fw-bold {% if categoria_seleccionada == 'herramientas' %}text-decoration-underline{% endif %}">Herramientas</a></li>
+            <li><a href="{% url 'catalogue' %}?categoria=materiales_construccion" class="text-decoration-none text-black fw-bold {% if categoria_seleccionada == 'materiales_construccion' %}text-decoration-underline{% endif %}">Materiales de Construcción</a></li>
+            <li><a href="{% url 'catalogue' %}?categoria=pinturas_adesivos" class="text-decoration-none text-black fw-bold {% if categoria_seleccionada == 'pinturas_adesivos' %}text-decoration-underline{% endif %}">Pinturas y Adhesivos</a></li>
+            <li><a href="{% url 'catalogue' %}?categoria=tornilleria" class="text-decoration-none text-black fw-bold {% if categoria_seleccionada == 'tornilleria' %}text-decoration-underline{% endif %}">Tornillería</a></li>
+            <li><a href="{% url 'catalogue' %}?categoria=seguridad_proteccion" class="text-decoration-none text-black fw-bold {% if categoria_seleccionada == 'seguridad_proteccion' %}text-decoration-underline{% endif %}">Seguridad y Protección</a></li>
     </ul>
   </div>
 
