@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
+from django.db.models import Count
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
@@ -96,7 +97,9 @@ def register_error(request):
 def home_page(request):
     if request.user.is_authenticated:
         user = request.user
-        order, created = Order.objects.get_or_create(user=user, complete=False)
+        order = Order.objects.filter(user=user, complete=False).order_by('-date_ordered').first()
+        if not order:
+            order = Order.objects.create(user=user, complete=False)
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
     else:
@@ -107,11 +110,50 @@ def home_page(request):
     context = {"items": items, "order": order, "cartItems": cartItems}
     return render(request, "home-page.html", context)
 
+@login_required
+def historial_compras(request):
+    if request.user.is_authenticated:
+        user = request.user
+        order = Order.objects.filter(user=user, complete=False).order_by('-date_ordered').first()
+        
+        if not order:
+            order = Order.objects.create(user=user, complete=False)
+        
+        items = order.orderitem_set.all()
+        cartItems = order.get_cart_items
+    else:
+        items = []
+        order = {"get_cart_total": 0, "get_cart_items": 0, "shipping": False}
+        cartItems = order["get_cart_items"]
+
+    ordenes = Order.objects.filter(user=request.user, complete=True).order_by('-date_ordered')
+
+    context = {
+        'ordenes': ordenes, 
+        'items': items, 
+        'order': order, 
+        'cartItems': cartItems,
+    }
+
+    return render(request, 'historial_compras.html', context)
 
 # ---- QUIENES SOMOS  ----
 
 def quienes_somos(request):
-    return render(request, 'quienes-somos.html')
+    if request.user.is_authenticated:
+        user = request.user
+        order = Order.objects.filter(user=user, complete=False).order_by('-date_ordered').first()
+        if not order:
+            order = Order.objects.create(user=user, complete=False)
+        items = order.orderitem_set.all()
+        cartItems = order.get_cart_items
+    else:
+        items = []
+        order = {"get_cart_total": 0, "get_cart_items": 0, "shipping": False}
+        cartItems = order["get_cart_items"]
+
+    context = {"items": items, "order": order, "cartItems": cartItems}
+    return render(request, "quienes-somos.html", context)
 
 
 # ---- VISTAS DE CATÁLOGO Y PRODUCTOS ----
@@ -132,7 +174,9 @@ class catalogueListView(ListView):
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
             user = self.request.user
-            order, created = Order.objects.get_or_create(user=user, complete=False)
+            order = Order.objects.filter(user=user, complete=False).order_by('-date_ordered').first()
+            if not order:
+                order = Order.objects.create(user=user, complete=False)
             items = order.orderitem_set.all()
             cartItems = order.get_cart_items
         else:
@@ -156,7 +200,9 @@ def producto_detail(request, producto_id):
 
     if request.user.is_authenticated:
         user = request.user
-        order, created = Order.objects.get_or_create(user=user, complete=False)
+        order = Order.objects.filter(user=user, complete=False).order_by('-date_ordered').first()
+        if not order:
+            order = Order.objects.create(user=user, complete=False)
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
     else:
@@ -173,7 +219,9 @@ def producto_detail(request, producto_id):
 def cart(request):
     if request.user.is_authenticated:
         user = request.user
-        order, created = Order.objects.get_or_create(user=user, complete=False)
+        order = Order.objects.filter(user=user, complete=False).order_by('-date_ordered').first()
+        if not order:
+            order = Order.objects.create(user=user, complete=False)
 
         # Eliminar automáticamente los ítems sin producto
         order.orderitem_set.filter(producto__isnull=True).delete()
@@ -194,7 +242,9 @@ def cart(request):
 def checkout(request):
     if request.user.is_authenticated:
         user = request.user
-        order, created = Order.objects.get_or_create(user=user, complete=False)
+        order = Order.objects.filter(user=user, complete=False).order_by('-date_ordered').first()
+        if not order:
+            order = Order.objects.create(user=user, complete=False)
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
     else:
@@ -217,7 +267,9 @@ def updateItem(request):
 
     user = request.user
     producto = Producto.objects.get(id=productoId)
-    order, created = Order.objects.get_or_create(user=user, complete=False)
+    order = Order.objects.filter(user=user, complete=False).order_by('-date_ordered').first()
+    if not order:
+        order = Order.objects.create(user=user, complete=False)
 
     orderItem, created = OrderItem.objects.get_or_create(order=order, producto=producto)
 
@@ -272,14 +324,25 @@ def respuesta(request):
     response = tx.commit(token)
 
     if response['status'] == 'AUTHORIZED':
-        order = Order.objects.get(user=request.user, complete=False)
+        # Buscar la orden incompleta más reciente del usuario
+        order = Order.objects.filter(user=request.user, complete=False).order_by('-date_ordered').first()
+
+        if not order:
+            return render(request, 'pago_error.html', {'response': response, 'error': 'No se encontró una orden válida.'})
+
         order.complete = True
         order.transaction_id = response['buy_order']
         order.save()
-        order_items = order.orderitem_set.all()
-        for item in order_items:
-            item.delete()
+
+        # Actualizar el stock de los productos
+        for item in order.orderitem_set.all():
+            producto = item.producto
+            producto.stockProducto -= item.quantity
+            producto.save()
+
+
         return render(request, 'pago_exito.html', {'response': response})
+
     else:
         return render(request, 'pago_error.html', {'response': response})
 
@@ -387,10 +450,13 @@ class ProductoBodegueroDeleteView(LoginRequiredMixin, DeleteView):
     template_name = "bodeguero/productosb_confirm_delete.html"
     success_url = reverse_lazy("bodegueroprod_list")
 
-class OrderListView(ListView):
+class OrderListView(LoginRequiredMixin, ListView):
     model = Order
     template_name = 'bodeguero/order_list.html'
     context_object_name = 'ordenes'
+
+    def get_queryset(self):
+        return Order.objects.annotate(num_items=Count('orderitem')).filter(num_items__gt=0)
 
 class OrdenDetailView(DetailView):
     model = Order

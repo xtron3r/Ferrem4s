@@ -58,10 +58,21 @@
               {% if user.is_superuser %}
                 <a class="nav-link text-black" href="{% url 'administracion' %}">ADMIN PANEL</a>
               {% else %}
-                <span class="nav-link text-black">{{ user.username }}</span>
+                <div class="dropdown">
+                  <button class="btn btn-warning dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ user.username|upper }}
+                  </button>
+                    <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                      <li><a class="dropdown-item" href="{% url 'historial_compras' %}">Historial de Compras</a></li>
+                      <li><a class="dropdown-item" href="">Perfil</a></li>
+                      {% if user.is_superuser %}
+                      <li><a class="dropdown-item" href="{% url 'administracion' %}">Admin Panel</a></li>
+                      {% endif %}
+                    </ul>
+                </div>
               {% endif %}
-              <a class="nav-link text-black" href="{% url 'logout' %}">CERRAR SESIÓN</a>
-              <a class="nav-link fw-bold fs-4 position-relative" href="{% url 'cart' %}">
+              <a class="nav-link text-black fw-bold" href="{% url 'logout' %}">CERRAR SESIÓN</a>
+              <a class="nav-link fw-bold fs-4 position-relative d-none d-lg-block" href="{% url 'cart' %}">
                 <p id="cart-total" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{cartItems}}</p>
                 <i class="fas fa-shopping-cart cart-icon"></i>
               </a>

@@ -52,18 +52,7 @@
                                 {% if user.is_superuser %}
                                     <a class="nav-link text-black" href="{% url 'administracion' %}">ADMIN PANEL</a>
                                 {% else %}
-                                    <div class="dropdown">
-                                        <button class="btn btn-warning dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            {{ user.username|upper }}
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                                            <li><a class="dropdown-item" href="{% url 'historial_compras' %}">Historial de Compras</a></li>
-                                            <li><a class="dropdown-item" href="">Perfil</a></li>
-                                            {% if user.is_superuser %}
-                                            <li><a class="dropdown-item" href="{% url 'administracion' %}">Admin Panel</a></li>
-                                            {% endif %}
-                                        </ul>
-                                    </div>
+                                    <span class="nav-link text-black">{{ user.username }}</span>
                                 {% endif %}
                                 <a class="nav-link text-black" href="{% url 'logout' %}">CERRAR SESIÓN</a>
                                 <a class="nav-link fw-bold fs-4 position-relative" href="{% url 'cart' %}">
@@ -79,50 +68,50 @@
             </div>
         </nav>
         
-        <div class="container-fluid bg-warning py-3 mb-3">
-            <h4 class="fw-bold text-center">CATEGORÍAS</h4>
-            <ul class="list-unstyled d-flex flex-column flex-md-row justify-content-center gap-4 text-center">
-                <li><a href="{% url 'catalogue' %}" class="text-decoration-none text-black fw-bold {% if not categoria_seleccionada %}text-decoration-underline{% endif %}">Todos</a></li>
-                <li><a href="{% url 'catalogue' %}?categoria=herramientas" class="text-decoration-none text-black fw-bold {% if categoria_seleccionada == 'herramientas' %}text-decoration-underline{% endif %}">Herramientas</a></li>
-                <li><a href="{% url 'catalogue' %}?categoria=materiales_construccion" class="text-decoration-none text-black fw-bold {% if categoria_seleccionada == 'materiales_construccion' %}text-decoration-underline{% endif %}">Materiales de Construcción</a></li>
-                <li><a href="{% url 'catalogue' %}?categoria=pinturas_adesivos" class="text-decoration-none text-black fw-bold {% if categoria_seleccionada == 'pinturas_adesivos' %}text-decoration-underline{% endif %}">Pinturas y Adhesivos</a></li>
-                <li><a href="{% url 'catalogue' %}?categoria=tornilleria" class="text-decoration-none text-black fw-bold {% if categoria_seleccionada == 'tornilleria' %}text-decoration-underline{% endif %}">Tornillería</a></li>
-                <li><a href="{% url 'catalogue' %}?categoria=seguridad_proteccion" class="text-decoration-none text-black fw-bold {% if categoria_seleccionada == 'seguridad_proteccion' %}text-decoration-underline{% endif %}">Seguridad y Protección</a></li>
-            </ul>
-        </div>
+        <div class="container mt-5">
+            <h2 class="mb-4">🛍️ Historial de Compras</h2>
+          
+            {% if ordenes %}
+            <table class="table table-striped table-bordered">
+                <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Usuario</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Accion</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                        {% for orden in ordenes %}
+                        <tr>
+                            <td>{{ orden.id }}</td>
+                            <td>{{ orden.user.username }}</td>
+                            <td>{{ orden.date_ordered|date:"d/m/Y H:i" }}</td>
+                            <td>
+                                {% if orden.complete %}
+                                    <span class="badge bg-success">Despachado</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">Pendiente</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="#" class="btn btn-sm btn-info">Ver Detalles</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">No hay ordenes.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+            </table>
+            {% else %}
+            <p>No has realizado compras aún.</p>
+            {% endif %}
+          </div>
 
-        <div class="container-fluid">
-            <div class="row justify-content-start">
-                {% for producto in productos %}
-                <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-4">
-                    <div class="card h-100 d-flex flex-column">
-                        {% if producto.portadaProducto %}
-                        <div class="text-center">
-                            <img src="{{ producto.portadaProducto.url }}" class="card-img-top w-100" alt="{{ producto.nombreProducto }}">
-                        </div>
-                        {% else %}
-                        <div class="text-center">
-                            <img src="{% static 'assets/img/default-product.png' %}" class="card-img-top w-100" alt="Producto sin imagen">
-                        </div>
-                        {% endif %}
 
-                        <div class="card-body d-flex flex-column">
-                            <div class="mt-auto">
-                                <h6 class="card-title mb-1">{{ producto.nombreProducto }}</h6>
-                                <p class="card-text mb-1">PRECIO: ${{ producto.precioProducto }}</p>
-                                <p class="card-text text-muted mb-2">MARCA: {{ producto.marcaProducto }}</p>
-                                <a href="{% url 'producto_detail' producto.id %}" class="btn btn-sm btn-primary w-100 mb-1">Detalles</a>
-                                <button data-producto="{{ producto.id }}" data-action="add" class="btn btn-sm btn-success update-cart w-100">Añadir</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% empty %}
-                <p class="text-center">No hay productos en esta categoría.</p>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
 
     <footer class="bg-dark text-white text-center py-3 mt-5">
         <div>&copy; Ferremas 2024</div>

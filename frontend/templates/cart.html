@@ -54,7 +54,18 @@
                 {% if user.is_superuser %}
                     <a class="nav-link text-black" href="{% url 'administracion' %}">ADMIN PANEL</a>
                 {% else %}
-                    <span class="nav-link text-black">{{ user.username }}</span>
+                    <div class="dropdown">
+                        <button class="btn btn-warning dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ user.username|upper }}
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="{% url 'historial_compras' %}">Historial de Compras</a></li>
+                            <li><a class="dropdown-item" href="">Perfil</a></li>
+                            {% if user.is_superuser %}
+                            <li><a class="dropdown-item" href="{% url 'administracion' %}">Admin Panel</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
                 {% endif %}
                 <a class="nav-link text-black" href="{% url 'logout' %}">CERRAR SESIÓN</a>
                 <a class="nav-link d-none d-lg-inline" href="{% url 'checkout' %}"><i class="bi bi-cart4 fs-3"></i></a>
@@ -74,7 +85,11 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h5>Items: <strong>{{ order.get_cart_items }}</strong></h5>
                         <h5>Total: <strong>${{ order.get_cart_total }}</strong></h5>
-                        <a class="btn btn-success" href="{% url 'checkout' %}">Pagar</a>
+                        {% if cartItems > 0 %}
+                            <a class="btn btn-success" href="{% url 'checkout' %}">Pagar</a>
+                        {% else %}
+                            <a class="btn btn-success disabled" href="#" tabindex="-1" aria-disabled="true">Pagar</a>
+                        {% endif %}
                     </div>
                 </div>
     

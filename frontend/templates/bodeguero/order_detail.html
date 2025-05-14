@@ -20,41 +20,94 @@
     <!-- Font Awesome (Icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
+<style>
+        body {
+            background-image: url("{% static 'assets/img/logoferremas.svg' %}");
+        }
+        .container {
+            display: flex;
+        }
+        .sidebar {
+            padding: 1rem;
+            background-color: black;    
+        }
+        .sidebar-item {
+            padding: 0.5rem 1rem;
+            color: #fff;
+        }
+        .sidebar-item:hover,
+        .nav-link.active {
+            background: #495357;
+        }
+        .sidebar-item:hover {
+            text-decoration: underline;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+</style>
 <body>
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <div class="content">
-            <h1 class="text-center fw-bolder bg-black text-warning">Detalle Orden #{{ orden.id }}</h1>
-            <div class="table-responsive" style="margin-top: 2rem;">
-                <table class="table table-dark table-striped table-sm">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Codigo</th>
-                            <th>Cantidad</th>
-                            <th>Precio</th>
-                            <th>Total</th>
-                            <th>Fecha</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in orden.orderitem_set.all %}
-                        <tr>
-                            <td>{{ item.producto.nombreProducto }}</td>
-                            <td>{{ item.producto.codigoProducto }}</td>
-                            <td>{{ item.quantity }}</td>
-                            <td>${{ item.producto.precioProducto }}</td>
-                            <td>${{ item.get_total }}</td>
-                            <td>{{ item.date_added|date:"d/m/Y H:i" }}</td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="6" class="text-center">No hay productos en esta orden.</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active sidebar-item" href="{% url 'bodegueroprod_list' %}">Productos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link sidebar-item" href="{% url 'order_list' %}">Gestionar Despacho</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link sidebar-item" href="{% url 'home_page' %}">Salir</a>
+                    </li>
+                </ul>
+            </nav>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="content">
+                    <h1 class="text-center fw-bolder bg-black text-warning">Lista de Productos</h1>
+                    <button style="margin-top: 1rem;" class="btn bg-black">
+                        <a href="{% url 'bodegueroprod_create' %}" class="fw-bold nav-link text-warning">AGREGAR PRODUCTO</a>
+                    </button>
+                    <div class="table-responsive" style="margin-top: 2rem;">
+                        <table class="table table-dark table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Codigo</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio</th>
+                                    <th>Total</th>
+                                    <th>Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in orden.orderitem_set.all %}
+                                <tr>
+                                    <td>{{ item.producto.nombreProducto }}</td>
+                                    <td>{{ item.producto.codigoProducto }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>${{ item.producto.precioProducto }}</td>
+                                    <td>${{ item.get_total }}</td>
+                                    <td>{{ item.date_added|date:"d/m/Y H:i" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center">No hay productos en esta orden.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="6" class="">TOTAL COMPRA: ${{ orden.get_cart_total }}</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </main>
         </div>
-    </main>
+    </div>
 </body>
 </html>
