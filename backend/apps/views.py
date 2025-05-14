@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
@@ -319,7 +320,8 @@ def iniciar_pago(request):
 def respuesta(request):
     token = request.GET.get('token_ws') or request.POST.get('token_ws')
     if not token:
-        return HttpResponseBadRequest("Token no recibido")
+        messages.error(request, "Token no recibido.")
+        return redirect('checkout')
 
     response = tx.commit(token)
 
@@ -456,7 +458,10 @@ class OrderListView(LoginRequiredMixin, ListView):
     context_object_name = 'ordenes'
 
     def get_queryset(self):
-        return Order.objects.annotate(num_items=Count('orderitem')).filter(num_items__gt=0)
+        return Order.objects.annotate(num_items=Count('orderitem')).filter(
+            num_items__gt=0,
+            transaction_id__isnull=False
+        ).exclude(transaction_id='')
 
 class OrdenDetailView(DetailView):
     model = Order
