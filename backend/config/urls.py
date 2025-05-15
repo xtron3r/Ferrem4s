@@ -51,15 +51,18 @@ urlpatterns = [
     path('administracion/user/create/', views.UserCreateView.as_view(), name='user_create'),
     path('administracion/users/<int:pk>/update/', views.UserUpdateView.as_view(), name='user_update'),
     path('administracion/users/<int:pk>/delete/', views.UserDeleteView.as_view(), name='user_delete'),
+    path("administracion/ordenes/", views.OrderAdminListView.as_view(), name="orden_adm_list"),
+    path("administracion/ordenes/<int:pk>/", views.OrdenAdminDetailView.as_view(), name="orden_adm_detail"),
+    path("administracion/ordenes/update/<int:pk>/", views.OrderAdminUpdateView.as_view(), name="orden_adm_update"),
     # -------------------------------------------------------------------------
     path("bodeguero/", views.home_bodeguero, name="home_bodeguero"),
     path("bodeguero/productos/", views.ProductoBodegueroListView.as_view(), name="bodegueroprod_list"),
     path('bodeguero/productos/create/', views.ProductoBodegueroCreateView.as_view(), name='bodegueroprod_create'),
     path('bodeguero/productos/update/<int:pk>/', views.ProductoBodegueroUpdateView.as_view(), name='bodegueroprod_update'),
     path('bodeguero/productos/delete/<int:pk>/', views.ProductoBodegueroDeleteView.as_view(), name='bodegueroprod_delete'),
-    path("bodeguero/ordenes/", views.OrderListView.as_view(), name="order_list"),
-    path("bodeguero/ordenes/<int:pk>/", views.OrdenDetailView.as_view(), name="orden_detail"),
-    path("bodeguero/ordenes/update/<int:pk>/", views.OrderUpdateView.as_view(), name="orden_update"),
+    path("bodeguero/ordenes/", views.OrderBodegueroListView.as_view(), name="order_list"),
+    path("bodeguero/ordenes/<int:pk>/", views.OrdenBodegueroDetailView.as_view(), name="orden_detail"),
+    path("bodeguero/ordenes/update/<int:pk>/", views.OrderBodegueroUpdateView.as_view(), name="orden_update"),
 
     # -------------------------------------------------------------------------
     path("historial_compras/", views.historial_compras, name="historial_compras"),

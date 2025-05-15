@@ -51,12 +51,15 @@
     <div class="container-fluid">
         <div class="row">
             <nav class="col-md-3 col-lg-2 d-md-block sidebar">
-                <ul class="nav flex-column">
+               <ul class="nav flex-column">
                     <li class="nav-item">
                         <a class="nav-link active sidebar-item" href="{% url 'productos_list' %}">Productos</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link sidebar-item" href="{% url 'user_list' %}">Usuarios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link sidebar-item" href="{% url 'orden_adm_list' %}">Ordenes</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link sidebar-item" href="{% url 'home_page' %}">Salir</a>

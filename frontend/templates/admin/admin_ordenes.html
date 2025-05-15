@@ -19,7 +19,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
     <!-- Font Awesome (Icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
+</head>
+<style>
         body {
             background-image: url("{% static 'assets/img/logoferremas.svg' %}");
         }
@@ -45,8 +46,7 @@
             flex-grow: 1;
             padding: 20px;
         }
-    </style>
-</head>
+</style>
 <body>
     <div class="container-fluid">
         <div class="row">
@@ -68,58 +68,50 @@
             </nav>
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div class="content">
-                    <h1 class="text-center fw-bolder bg-black text-warning">Lista de Productos</h1>
-                    <button style="margin-top: 1rem;" class="btn bg-black">
-                        <a href="{% url 'productos_create' %}" class="fw-bold nav-link text-warning">AGREGAR PRODUCTO</a>
-                    </button>
+                    <h1 class="text-center fw-bolder bg-black text-warning">Lista de Ordenes</h1>
                     <div class="table-responsive" style="margin-top: 2rem;">
                         <table class="table table-dark table-striped table-sm">
                             <thead>
-                                <tr style="border: 1px solid black; background-color: #15725b;">
-                                    <th style="border: 1px solid black;" >Nombre</th>
-                                    <th style="border: 1px solid black;" >Codigo</th>
-                                    <th style="border: 1px solid black;" >Marca</th>
-                                    <th style="border: 1px solid black;" >Descripción</th>
-                                    <th style="border: 1px solid black;" >Stock</th>
-                                    <th style="border: 1px solid black;" >Categoría</th>
-                                    <th style="border: 1px solid black;" >Portada</th>
-                                    <th style="border: 1px solid black;" >Precio</th>
-                                    <th style="border: 1px solid black;" >Editar</th>
-                                    <th style="border: 1px solid black;" >Eliminar</th>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Usuario</th>
+                                    <th>Fecha</th>
+                                    <th>Estado (Pagado | Despachado | Entregado)</th>
+                                    <th>Accion</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for producto in productos %}
-                                <tr style="border: 1px solid black;">
-                                    <!-- Datos del producto -->
-                                    <td style="border: 1px solid black;" >{{ producto.nombreProducto }}</td>
-                                    <td style="border: 1px solid black;" >{{ producto.codigoProducto }}</td>
-                                    <td style="border: 1px solid black;" >{{ producto.marcaProducto }}</td>
-                                    <td style="border: 1px solid black;" >{{ producto.descripcionProducto }}</td>
-                                    <td style="border: 1px solid black;" >{{ producto.stockProducto }}</td>
-                                    <td style="border: 1px solid black;" >{{ producto.categoriaProducto }}</td>
-                                    <td style="border: 1px solid black;" >
-                                        {% if producto.portadaProducto %}
-                                            <img src="{{ producto.portadaProducto.url }}" alt="{{ producto.nombreProducto }}" width="50">
-                                        {% else %}
-                                            N/A
-                                        {% endif %}
+                                {% for orden in ordenes %}
+                                <tr>
+                                    <td>{{ orden.id }}</td>
+                                    <td>{{ orden.user.username }}</td>
+                                    <td>{{ orden.date_ordered|date:"d/m/Y H:i" }}</td>
+                                    <td>{{orden.estado}}</td>
+                                    <td>
+                                        <form action="{% url 'orden_adm_update' orden.id %}" method="post" class="d-inline d-flex gap-3">
+                                            <a href="{% url 'orden_adm_detail' orden.id %}" class="btn btn-sm btn-info">Ver Detalles</a>
+                                            {% csrf_token %}
+                                            <select name="nuevo_estado" class="form-select form-select-sm " style="width: 150px">
+                                                <option value="" disabled selected>Seleccionar estado</option>
+                                                <option value="pagado" {% if orden.estado == 'pagado' %}selected{% endif %}>Pagado</option>
+                                                <option value="despachado" {% if orden.estado == 'despachado' %}selected{% endif %}>Despachado</option>
+                                                <option value="entregado" {% if orden.estado == 'entregado' %}selected{% endif %}>Entregado</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-sm btn-primary">Actualizar</button>
+                                        </form>
                                     </td>
-                                    <td style="border: 1px solid black;" >${{ producto.precioProducto }}</td>
-                                    <td style="border: 1px solid black;" >
-                                        <a href="{% url 'productos_update' producto.id %}" class="btn btn-warning me-2">Editar</a>
-                                    </td>
-                                    <td style="border: 1px solid black;" >
-                                        <a href="{% url 'productos_delete' producto.id %}" class="btn btn-danger">Eliminar</a>
-                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">No hay ordenes.</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
-
                 </div>
             </main>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

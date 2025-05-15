@@ -29,7 +29,7 @@ class Order(models.Model):
         ('entregado', 'Entregado'),
     ]
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    date_ordered = models.DateTimeField(auto_now_add=True)
+    date_ordered = models.DateTimeField(null=True, blank=True)
     complete = models.BooleanField(default=False)
     transaction_id = models.CharField(max_length=100, null=True)
     estado = models.CharField(max_length=20, choices=ESTADOS, default='carrito')

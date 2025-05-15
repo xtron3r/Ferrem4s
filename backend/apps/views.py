@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
+from django.utils import timezone
 from django.db.models import Count
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
@@ -344,6 +345,7 @@ def respuesta(request):
         order.complete = True
         order.transaction_id = response['buy_order']
         order.estado = 'pagado'
+        order.date_ordered = timezone.now()
         order.save()
 
         # Actualizar el stock de los productos
@@ -423,6 +425,42 @@ class UserDeleteView(LoginRequiredMixin, DeleteView):
     template_name = "admin/user_confirm_delete.html"
     success_url = reverse_lazy("user_list")
 
+class OrderAdminListView(LoginRequiredMixin, ListView):
+    model = Order
+    template_name = 'admin/admin_ordenes.html'
+    context_object_name = 'ordenes'
+
+    def get_queryset(self):
+        return Order.objects.annotate(num_items=Count('orderitem')).filter(
+            estado__in=['pagado', 'despachado', 'entregado'],
+            num_items__gt=0,
+            transaction_id__isnull=False
+        ).exclude(
+            transaction_id=''
+        )
+
+class OrdenAdminDetailView(DetailView):
+    model = Order
+    template_name = 'admin/admin_ordenes_detail.html'
+    context_object_name = 'orden'
+
+class OrderAdminUpdateView(UpdateView):
+    model = Order
+    fields = []
+    template_name = 'admin/admin_ordenes_detail.html'
+    success_url = reverse_lazy('orden_adm_list')
+
+    def post(self, request, *args, **kwargs):
+        order = self.get_object()
+        nuevo_estado = request.POST.get('nuevo_estado')
+
+        if nuevo_estado in ['pagado', 'despachado', 'entregado']:
+            order.estado = nuevo_estado
+            order.save()
+
+        return redirect(self.success_url)
+
+
 
 # ---- VISTAS BODEGUERO ----
 @login_required
@@ -461,7 +499,7 @@ class ProductoBodegueroDeleteView(LoginRequiredMixin, DeleteView):
     template_name = "bodeguero/productosb_confirm_delete.html"
     success_url = reverse_lazy("bodegueroprod_list")
 
-class OrderListView(LoginRequiredMixin, ListView):
+class OrderBodegueroListView(LoginRequiredMixin, ListView):
     model = Order
     template_name = 'bodeguero/order_list.html'
     context_object_name = 'ordenes'
@@ -475,12 +513,12 @@ class OrderListView(LoginRequiredMixin, ListView):
             transaction_id=''
         )
 
-class OrdenDetailView(DetailView):
+class OrdenBodegueroDetailView(DetailView):
     model = Order
     template_name = 'bodeguero/order_detail.html'
     context_object_name = 'orden'
 
-class OrderUpdateView(UpdateView):
+class OrderBodegueroUpdateView(UpdateView):
     model = Order
     fields = []
     template_name = 'bodeguero/order_detail.html'
