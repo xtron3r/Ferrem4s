@@ -21,10 +21,18 @@ class Producto(models.Model):
 
 
 class Order(models.Model):
+    ESTADOS = [
+        ('carrito', 'Carrito activo'),
+        ('pendiente', 'Pendiente de pago'),
+        ('pagado', 'Pagado'),
+        ('despachado', 'Despachado'),
+        ('entregado', 'Entregado'),
+    ]
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     date_ordered = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False)
     transaction_id = models.CharField(max_length=100, null=True)
+    estado = models.CharField(max_length=20, choices=ESTADOS, default='carrito')
 
     def __str__(self):
         return str(self.id)

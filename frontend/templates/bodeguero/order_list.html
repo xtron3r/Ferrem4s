@@ -76,7 +76,7 @@
                                     <th>ID</th>
                                     <th>Usuario</th>
                                     <th>Fecha</th>
-                                    <th>Estado</th>
+                                    <th>Estado (Pagado | Despachado | Entregado)</th>
                                     <th>Accion</th>
                                 </tr>
                             </thead>
@@ -86,25 +86,18 @@
                                     <td>{{ orden.id }}</td>
                                     <td>{{ orden.user.username }}</td>
                                     <td>{{ orden.date_ordered|date:"d/m/Y H:i" }}</td>
+                                    <td>{{orden.estado}}</td>
                                     <td>
-                                        {% if orden.complete %}
-                                            <span class="badge bg-success">Despachado</span>
-                                        {% else %}
-                                            <span class="badge bg-warning text-dark">Pendiente</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <a href="{% url 'orden_detail' orden.id %}" class="btn btn-sm btn-info">Ver Detalles</a>
-                                        
-                                        <form action="{% url 'orden_update' orden.id %}" method="post" style="display:inline;">
+                                        <form action="{% url 'orden_update' orden.id %}" method="post" class="d-inline d-flex gap-3">
+                                            <a href="{% url 'orden_detail' orden.id %}" class="btn btn-sm btn-info">Ver Detalles</a>
                                             {% csrf_token %}
-                                            <button type="submit" class="btn btn-sm {% if orden.complete %}btn-warning{% else %}btn-success{% endif %}">
-                                                {% if orden.complete %}
-                                                Marcar como Pendiente
-                                                {% else %}
-                                                Marcar como Despachado
-                                                {% endif %}
-                                            </button>
+                                            <select name="nuevo_estado" class="form-select form-select-sm " style="width: 150px">
+                                                <option value="" disabled selected>Seleccionar estado</option>
+                                                <option value="pagado" {% if orden.estado == 'pagado' %}selected{% endif %}>Pagado</option>
+                                                <option value="despachado" {% if orden.estado == 'despachado' %}selected{% endif %}>Despachado</option>
+                                                <option value="entregado" {% if orden.estado == 'entregado' %}selected{% endif %}>Entregado</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-sm btn-primary">Actualizar</button>
                                         </form>
                                     </td>
                                 </tr>

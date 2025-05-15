@@ -115,11 +115,11 @@ def home_page(request):
 def historial_compras(request):
     if request.user.is_authenticated:
         user = request.user
+
         order = Order.objects.filter(user=user, complete=False).order_by('-date_ordered').first()
-        
         if not order:
             order = Order.objects.create(user=user, complete=False)
-        
+
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
     else:
@@ -127,16 +127,25 @@ def historial_compras(request):
         order = {"get_cart_total": 0, "get_cart_items": 0, "shipping": False}
         cartItems = order["get_cart_items"]
 
-    ordenes = Order.objects.filter(user=request.user, complete=True).order_by('-date_ordered')
+    
+    ordenes = Order.objects.filter(
+            user=user,
+            transaction_id__isnull=False
+        ).exclude(transaction_id='').exclude(complete=False).order_by('-date_ordered')
 
     context = {
-        'ordenes': ordenes, 
-        'items': items, 
-        'order': order, 
-        'cartItems': cartItems,
+        'ordenes': ordenes,       
+        'items': items,           
+        'order': order,           
+        'cartItems': cartItems,   
     }
 
     return render(request, 'historial_compras.html', context)
+
+class OrdenDetailUsuarioView(DetailView):
+    model = Order
+    template_name = 'historial_compras_detalle.html'
+    context_object_name = 'orden'
 
 # ---- QUIENES SOMOS  ----
 
@@ -331,9 +340,10 @@ def respuesta(request):
 
         if not order:
             return render(request, 'pago_error.html', {'response': response, 'error': 'No se encontró una orden válida.'})
-
+        
         order.complete = True
         order.transaction_id = response['buy_order']
+        order.estado = 'pagado'
         order.save()
 
         # Actualizar el stock de los productos
@@ -341,7 +351,6 @@ def respuesta(request):
             producto = item.producto
             producto.stockProducto -= item.quantity
             producto.save()
-
 
         return render(request, 'pago_exito.html', {'response': response})
 
@@ -459,9 +468,12 @@ class OrderListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Order.objects.annotate(num_items=Count('orderitem')).filter(
+            estado__in=['pagado', 'despachado', 'entregado'],
             num_items__gt=0,
             transaction_id__isnull=False
-        ).exclude(transaction_id='')
+        ).exclude(
+            transaction_id=''
+        )
 
 class OrdenDetailView(DetailView):
     model = Order
@@ -476,8 +488,12 @@ class OrderUpdateView(UpdateView):
 
     def post(self, request, *args, **kwargs):
         order = self.get_object()
-        order.complete = not order.complete
-        order.save()
+        nuevo_estado = request.POST.get('nuevo_estado')
+
+        if nuevo_estado in ['pagado', 'despachado', 'entregado']:
+            order.estado = nuevo_estado
+            order.save()
+
         return redirect(self.success_url)
 
 

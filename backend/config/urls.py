@@ -62,7 +62,8 @@ urlpatterns = [
     path("bodeguero/ordenes/update/<int:pk>/", views.OrderUpdateView.as_view(), name="orden_update"),
 
     # -------------------------------------------------------------------------
-    path("historial_compras/", views.historial_compras, name="historial_compras"),   
+    path("historial_compras/", views.historial_compras, name="historial_compras"),
+    path('historial_compras/ordenes/<int:pk>/', views.OrdenDetailUsuarioView.as_view(), name='historial_compras_detalle'),
 ]
 
 if settings.DEBUG:
