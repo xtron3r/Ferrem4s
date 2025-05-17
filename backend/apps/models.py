@@ -1,5 +1,24 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
+
+
+class CustomUser(AbstractUser):
+    ROLES = [
+        ('admin', 'Administrador'),
+        ('usuario', 'Usuario'),
+        ('bodeguero', 'Bodeguero')
+    ]
+    email = models.EmailField(unique=True)
+    rol = models.CharField(max_length=20, choices=ROLES, default='usuario')
+    telefono = models.CharField(max_length=20, null=True, blank=True)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'username']
+
+    def __str__(self):
+        return self.first_name
+
+
 
 class Producto(models.Model):
     codigoProducto = models.CharField(max_length=200, null=True, blank=True, unique=True)
@@ -28,7 +47,7 @@ class Order(models.Model):
         ('despachado', 'Despachado'),
         ('entregado', 'Entregado'),
     ]
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
     date_ordered = models.DateTimeField(null=True, blank=True)
     complete = models.BooleanField(default=False)
     transaction_id = models.CharField(max_length=100, null=True)

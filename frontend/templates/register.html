@@ -17,21 +17,28 @@
     <script src="{% static 'javascript/register.js' %}"></script>
 </head>
 <body>
-    <div class="container-md d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="container-md d-flex justify-content-center align-items-center">
         <div class="row w-100">
-            <div class="col d-flex justify-content-center">
+            <div class="col d-flex justify-content-center mt-3">
                 <form id="registerForm" method="POST" class="bg-black p-5 rounded-5" style="width: 100%; max-width: 500px;">
                     {% csrf_token %}
                     <h2 class="text-white text-center mb-4">REGISTRO</h2>
-    
                     <div class="mb-3">
-                        <label for="registerName" class="form-label text-white">Usuario:</label>
-                        <input placeholder="Usuario" type="text" class="form-control" id="registerName" name="registerName" required>
+                        <label for="registerName" class="form-label text-white">Nombre:</label>
+                        <input placeholder="Nombre" type="text" class="form-control" id="registerName" name="registerName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerLastName" class="form-label text-white">Apellido:</label>
+                        <input placeholder="Apellido" type="text" class="form-control" id="registerLastName" name="registerLastName" required>
                     </div>
                     <div class="mb-3">
                         <label for="registerEmail" class="form-label text-white">Correo Electrónico:</label>
                         <input placeholder="Email" type="email" class="form-control" id="registerEmail" name="registerEmail" required>
                         <div id="emailFeedback" class="invalid-feedback">Ingrese un correo electrónico válido</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerPhone" class="form-label text-white">Teléfono:</label>
+                        <input placeholder="Teléfono" type="text" class="form-control" id="registerPhone" name="registerPhone" required>
                     </div>
                     <div class="mb-3">
                         <label for="registerPassword" class="form-label text-white">Contraseña:</label>

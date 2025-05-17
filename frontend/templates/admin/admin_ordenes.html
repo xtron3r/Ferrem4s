@@ -84,7 +84,7 @@
                                 {% for orden in ordenes %}
                                 <tr>
                                     <td>{{ orden.id }}</td>
-                                    <td>{{ orden.user.username }}</td>
+                                    <td>{{ orden.user.first_name }}</td>
                                     <td>{{ orden.date_ordered|date:"d/m/Y H:i" }}</td>
                                     <td>{{orden.estado}}</td>
                                     <td>

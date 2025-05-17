@@ -5,6 +5,10 @@ $(document).ready(function () {
                 required: true,
                 minlength: 2,
             },
+            registerLastName: {
+                required: true,
+                minlength: 2,
+            },
             registerEmail: {
                 required: true,
                 email: true,
@@ -17,6 +21,10 @@ $(document).ready(function () {
                 required: true,
                 equalTo: '#registerPassword',
             },
+            registerPhone:{
+                required: true,
+                number: true,
+            }
         },
         errorPlacement: function (error, element) {
             error.addClass("text-warning fw-semibold"); // Color y estilo
@@ -26,6 +34,10 @@ $(document).ready(function () {
             registerName: {
                 required: "Por favor ingresa tu nombre",
                 minlength: "Tu nombre debe tener al menos 2 caracteres",
+            },
+            registerLastName: {
+                required: "Por favor ingresa tu apellido",
+                minlength: "Tu apellido debe tener al menos 2 caracteres",
             },
             registerEmail: {
                 required: "Por favor ingresa un correo electrónico",
@@ -39,6 +51,10 @@ $(document).ready(function () {
                 required: "Por favor confirma tu contraseña",
                 equalTo: "Las contraseñas no coinciden",
             },
+            registerPhone: {
+                required: "Por favor ingresa tu número de teléfono",
+                number: "Por favor ingresa un número de teléfono válido",
+            }
         },
     });
 });

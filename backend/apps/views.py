@@ -1,7 +1,7 @@
 # ---- IMPORTACIONES ----
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout, authenticate, get_user_model
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db.models import Count
@@ -27,6 +27,8 @@ from .serializers import ProductoSerializer, OrderSerializer, OrderItemSerialize
 from rest_framework import viewsets
 from rest_framework.response import Response
 
+User = get_user_model()
+
 # ---- VISTAS DE AUTENTICACIÓN ----
 
 def register(request):
@@ -46,13 +48,20 @@ def register(request):
 
             try:
                 user = User.objects.create_user(
-                    username=request.POST["registerName"],
+                    username=request.POST["registerEmail"],
                     email=request.POST["registerEmail"],
                     password=request.POST["registerPassword"],
+                    first_name=request.POST["registerName"],
+                    last_name=request.POST["registerLastName"],
+                    telefono=request.POST["registerPhone"],
+                    rol="usuario"
                 )
                 user.save()
                 login(request, user)
-                return redirect("home_page")
+                if user.rol == "bodeguero":
+                    return redirect("bodeguero_home")
+                else:
+                    return redirect("home_page")
 
             except IntegrityError:
                 return render(
@@ -79,7 +88,11 @@ def signin_user(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect("home_page")
+
+            if user.rol == "bodeguero":
+                return redirect("home_bodeguero") 
+            else:
+                return redirect("home_page")
         else:
             error = "Correo o contraseña incorrectos."
         return render(request, "signin.html", {"form": form, "error": error})
@@ -404,13 +417,30 @@ class UserListView(LoginRequiredMixin, ListView):
 
 class UserCreateView(LoginRequiredMixin, CreateView):
     model = User
-    fields = ["username", "email", "password", "is_superuser"]
+    fields = ["email", "first_name", "last_name", "rol", "telefono", "password", "is_superuser"]
     template_name = "admin/user_form.html"
     success_url = reverse_lazy("user_list")
 
     def form_valid(self, form):
+        password = self.request.POST.get("password")
+        confirm_password = self.request.POST.get("confirm_password")
+        rol = self.request.POST.get("rol")
+        first_name = self.request.POST.get("first_name")
+
+        if password != confirm_password:
+            return render(self.request, self.template_name, {"form": form, "error": "Las contraseñas no coinciden."})
+        
         user = form.save(commit=False)
+        user.username = first_name.lower()
         user.set_password(form.cleaned_data["password"])
+
+        if rol == "admin":
+            user.is_superuser = True
+            user.is_staff = True
+        else:
+            user.is_superuser = False
+            user.is_staff = False
+
         user.save()
         return super().form_valid(form)
 
@@ -465,10 +495,14 @@ class OrderAdminUpdateView(UpdateView):
 # ---- VISTAS BODEGUERO ----
 @login_required
 def home_bodeguero(request):
+    if request.user.rol != 'bodeguero':
+        return redirect('home_page')
     return render(request, 'bodeguero/home_bodeguero.html')
 
 @login_required
 def bodeguero_pedidos(request):
+    if request.user.rol != 'bodeguero':
+        return redirect('home_page')
     return render(request, 'bodeguero/order_list.html')
 
 class ProductoBodegueroListView(LoginRequiredMixin, ListView):

@@ -56,7 +56,7 @@
                     {% if user.is_superuser %}
                         <a class="nav-link text-black" href="{% url 'administracion' %}">ADMIN PANEL</a>
                     {% else %}
-                    <span class="nav-link text-black">{{ user.username }}</span>
+                    <span class="nav-link text-black">{{ user.first_name }}</span>
                 {% endif %}
                     <a class="nav-link text-black" href="{% url 'logout' %}">CERRAR SESIÓN</a>
                     <a class="nav-link text-black " href="{% url 'cart' %}">

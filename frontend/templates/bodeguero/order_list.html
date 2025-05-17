@@ -59,7 +59,7 @@
                         <a class="nav-link sidebar-item" href="{% url 'order_list' %}">Gestionar Despacho</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link sidebar-item" href="{% url 'home_page' %}">Salir</a>
+                        <a class="nav-link sidebar-item" href="{% url 'logout' %}">Salir</a>
                     </li>
                 </ul>
             </nav>
@@ -84,7 +84,7 @@
                                 {% for orden in ordenes %}
                                 <tr>
                                     <td>{{ orden.id }}</td>
-                                    <td>{{ orden.user.username }}</td>
+                                    <td>{{ orden.user.first_name }}</td>
                                     <td>{{ orden.date_ordered|date:"d/m/Y H:i" }}</td>
                                     <td>{{orden.estado}}</td>
                                     <td>

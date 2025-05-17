@@ -52,7 +52,7 @@
                                 {% if user.is_superuser %}
                                     <a class="nav-link text-black" href="{% url 'administracion' %}">ADMIN PANEL</a>
                                 {% else %}
-                                    <span class="nav-link text-black">{{ user.username }}</span>
+                                    <span class="nav-link text-black">{{ user.first_name }}</span>
                                 {% endif %}
                                 <a class="nav-link text-black" href="{% url 'logout' %}">CERRAR SESIÓN</a>
                                 <a class="nav-link fw-bold fs-4 position-relative" href="{% url 'cart' %}">
@@ -85,7 +85,7 @@
                         {% for orden in ordenes %}
                         <tr>
                             <td>{{ orden.id }}</td>
-                            <td>{{ orden.user.username }}</td>
+                            <td>{{ orden.user.first_name }}</td>
                             <td>{{ orden.date_ordered|date:"d/m/Y H:i" }}</td>
                             <td>{{orden.estado}}</td>
                             <td>

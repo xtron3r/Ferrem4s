@@ -29,6 +29,8 @@ SESSION_COOKIE_AGE = 1209600
 SESSION_COOKIE_SECURE = False  
 SESSION_COOKIE_HTTPONLY = True
 
+AUTH_USER_MODEL = "apps.CustomUser"
+
 # Middleware settings
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
