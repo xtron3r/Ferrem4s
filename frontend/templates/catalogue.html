@@ -109,7 +109,10 @@
                         <div class="card-body d-flex flex-column">
                             <div class="mt-auto">
                                 <h6 class="card-title mb-1">{{ producto.nombreProducto }}</h6>
-                                <p class="card-text mb-1">PRECIO: ${{ producto.precioProducto }}</p>
+                                <p class="card-text mb-1">PRECIO: ${{ producto.precioProducto|floatformat:0 }} CLP</p>
+                                {% if producto.precio_usd %}
+                                    <p class="card-text mb-1 text-success"> PRECIO USD:  ${{ producto.precio_usd }} USD</p>
+                                {% endif %}
                                 <p class="card-text text-muted mb-2">MARCA: {{ producto.marcaProducto }}</p>
                                 <a href="{% url 'producto_detail' producto.id %}" class="btn btn-sm btn-primary w-100 mb-1">Detalles</a>
                                 <button data-producto="{{ producto.id }}" data-action="add" class="btn btn-sm btn-success update-cart w-100">Añadir</button>

@@ -19,6 +19,8 @@ from django.views.generic import (
 )
 import json
 
+import requests
+
 
 from .models import *
 from .forms import EmailAuthenticationForm, ProductoForm
@@ -207,13 +209,50 @@ class catalogueListView(ListView):
             items = []
             order = {"get_cart_total": 0, "get_cart_items": 0, "shipping": False}
             cartItems = order["get_cart_items"]
-            
+
+        # Llamada a la API para obtener dólar
+        try:
+            url = (
+                "https://si3.bcentral.cl/SieteRestWS/SieteRestWS.ashx?"
+                "user=gib.beiza@duocuc.cl&pass=Gucho2847%3F"
+                "&timeseries=F073.TCO.PRE.Z.D&function=GetSeries"
+            )
+            response = requests.get(url)
+            data = response.json()
+
+            observaciones = data.get("Series", {}).get("Obs", [])
+            if observaciones:
+                # Reemplazo coma por punto para float correcto
+                ultimo_valor_str = observaciones[-1]["value"].replace(',', '.')
+                ultimo_valor = float(ultimo_valor_str)  # Valor dólar float
+                fecha_valor = observaciones[-1]["indexDateString"]
+            else:
+                ultimo_valor = None
+                fecha_valor = None
+        except Exception as e:
+            ultimo_valor = None
+            fecha_valor = None
+
+        productos = context.get("productos")
+        if ultimo_valor and productos:
+            for producto in productos:
+                try:
+                    producto.precio_usd = round(producto.precioProducto / ultimo_valor, 2)
+                except Exception:
+                    producto.precio_usd = None
+        else:
+            if productos:
+                for producto in productos:
+                    producto.precio_usd = None
 
         context.update({
             "items": items,
             "order": order,
             "cartItems": cartItems,
             "categoria_seleccionada": self.request.GET.get("categoria", None),
+            "dolar": ultimo_valor,
+            "fecha_dolar": fecha_valor,
+            "productos": productos,  # actualizado con precio_usd
         })
 
         return context
@@ -247,10 +286,8 @@ def cart(request):
         if not order:
             order = Order.objects.create(user=user, complete=False)
 
-        # Eliminar automáticamente los ítems sin producto
         order.orderitem_set.filter(producto__isnull=True).delete()
 
-        # Filtrar solo los ítems con producto válido
         items = order.orderitem_set.filter(producto__isnull=False)
 
         items = order.orderitem_set.all()
