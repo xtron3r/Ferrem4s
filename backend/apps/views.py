@@ -365,16 +365,35 @@ options = WebpayOptions(
 tx = Transaction(options)
 
 def iniciar_pago(request):
+
     if request.method == 'POST':
+        region = request.POST.get('region')
+        comuna = request.POST.get('comuna')
+        direccion = request.POST.get('direccion')
+
+        # Buscar orden incompleta
+        order = Order.objects.filter(user=request.user, complete=False).order_by('-date_ordered').first()
+
+        if not order:
+            messages.error(request, "No se encontró una orden para pagar.")
+            return redirect('checkout')
+
         amount = int(request.POST.get('total'))
         buy_order = str(uuid.uuid4())[:26]
         session_id = str(uuid.uuid4())[:61]
         return_url = request.build_absolute_uri('/pago/respuesta/')
 
+        order.region = region
+        order.comuna = comuna
+        order.direccion = direccion
+        order.date_ordered = timezone.now()
+        order.save()
+
+
         response = tx.create(buy_order, session_id, amount, return_url)
         return redirect(f"{response['url']}?token_ws={response['token']}")
-
-    return render(request, 'checkout.html')
+        
+    return redirect('checkout')
 
 @csrf_exempt
 def respuesta(request):

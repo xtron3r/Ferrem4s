@@ -76,6 +76,8 @@
                                     <th>ID</th>
                                     <th>Usuario</th>
                                     <th>Fecha</th>
+                                    <th>Direccion</th>
+                                    <th>Comuna</th>
                                     <th>Estado (Pagado | Despachado | Entregado)</th>
                                     <th>Accion</th>
                                 </tr>
@@ -86,6 +88,8 @@
                                     <td>{{ orden.id }}</td>
                                     <td>{{ orden.user.first_name }}</td>
                                     <td>{{ orden.date_ordered|date:"d/m/Y H:i" }}</td>
+                                    <td>{{ orden.direccion }}</td>
+                                    <td>{{ orden.comuna }}</td>
                                     <td>{{orden.estado}}</td>
                                     <td>
                                         <form action="{% url 'orden_update' orden.id %}" method="post" class="d-inline d-flex gap-3">

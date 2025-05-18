@@ -88,15 +88,6 @@
                     <form action="{% url 'iniciar_pago' %}" method="post">
                         {% csrf_token %}
 
-                        <div id="user-info">
-                            <br>
-                            <h3>Contacto:</h3>
-                            <hr>
-                            <div class="form-field">
-                                <input required class="form-control" type="number" name="telefono" placeholder="Teléfono..">
-                            </div>
-                        </div>
-
                         <div id="shipping-info">
                             <br>
                             <h3>Envío:</h3>

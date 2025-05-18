@@ -52,6 +52,9 @@ class Order(models.Model):
     complete = models.BooleanField(default=False)
     transaction_id = models.CharField(max_length=100, null=True)
     estado = models.CharField(max_length=20, choices=ESTADOS, default='carrito')
+    region = models.CharField(max_length=100, null=True, blank=True)
+    comuna = models.CharField(max_length=100, null=True, blank=True)
+    direccion = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return str(self.id)
