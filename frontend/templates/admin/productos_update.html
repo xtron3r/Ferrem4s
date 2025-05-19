@@ -107,10 +107,16 @@
                                 value="{{ form.stockProducto.value|default_if_none:'' }}" required>
                         </div>
                     
-                        <div class="mb-3">
+                         <div class="mb-3">
                             <label for="id_categoriaProducto" class="form-label">Categoría:</label>
-                            <input type="text" name="categoriaProducto" id="id_categoriaProducto" class="form-control" 
-                                value="{{ form.categoriaProducto.value|default_if_none:'' }}" required>
+                            <select name="categoriaProducto" id="id_categoriaProducto" class="form-control" required>
+                                <option value="" disabled {% if not form.categoriaProducto.value %}selected{% endif %}>Seleccione una categoría</option>
+                                <option value="herramientas">Herramientas</option>
+                                <option value="materiales_construccion">Materiales de Construcción</option>
+                                <option value="pinturas_adesivos">Pinturas y Adesivos</option>
+                                <option value="tornilleria">Tornillería</option>
+                                <option value="seguridad_proteccion">Seguridad y Protección</option>
+                            </select>
                         </div>
                     
                         <div class="mb-3">

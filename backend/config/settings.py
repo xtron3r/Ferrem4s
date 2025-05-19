@@ -70,7 +70,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'localhost:1521/xe',
+        'NAME': 'localhost:1522/xe',
         'USER': 'Ferremas',
         'PASSWORD': 'ferre123',
     }
