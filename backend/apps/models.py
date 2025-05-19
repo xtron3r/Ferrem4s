@@ -13,7 +13,7 @@ class CustomUser(AbstractUser):
     telefono = models.CharField(max_length=20, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'username']
+    REQUIRED_FIELDS = ['first_name', 'username','rol']
 
     def __str__(self):
         return self.first_name
@@ -47,7 +47,7 @@ class Order(models.Model):
         ('despachado', 'Despachado'),
         ('entregado', 'Entregado'),
     ]
-    user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     date_ordered = models.DateTimeField(null=True, blank=True)
     complete = models.BooleanField(default=False)
     transaction_id = models.CharField(max_length=100, null=True)
@@ -85,7 +85,7 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.SET_NULL, null=True,blank=True)
-    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
     quantity = models.IntegerField(default=0, null=True, blank=True)
     date_added = models.DateTimeField(auto_now_add=True)
 

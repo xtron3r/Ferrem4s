@@ -62,7 +62,7 @@
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="userDropdown">
                             <li><a class="dropdown-item" href="{% url 'historial_compras' %}">Historial de Compras</a></li>
-                            <li><a class="dropdown-item" href="">Perfil</a></li>
+                            
                             {% if user.is_superuser %}
                             <li><a class="dropdown-item" href="{% url 'administracion' %}">Admin Panel</a></li>
                             {% endif %}
