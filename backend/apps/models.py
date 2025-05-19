@@ -24,7 +24,7 @@ class Producto(models.Model):
     codigoProducto = models.CharField(max_length=200, null=True, blank=True, unique=True)
     nombreProducto = models.CharField(max_length=200, null=True, blank=True)
     marcaProducto = models.CharField(max_length=200, null=True, blank=True)
-    descripcionProducto = models.TextField(max_length=1000, null=True, blank=True)
+    descripcionProducto = models.CharField(max_length=1000, null=True, blank=True)
     precioProducto = models.PositiveIntegerField()
     stockProducto = models.PositiveIntegerField(default=0)
     categoriaProducto = models.CharField(max_length=200, null=True, blank=True)
