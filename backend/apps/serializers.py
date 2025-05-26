@@ -4,6 +4,7 @@ from .models import (
     Producto,
     Order,
     OrderItem,
+    CustomUser
 )
 class ProductoSerializer(serializers.ModelSerializer):   
     class Meta:
@@ -21,3 +22,9 @@ class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
         fields = "__all__"
+
+class UserSerializer(serializers.ModelSerializer):   
+    class Meta:
+        model = CustomUser
+        fields = "__all__"
+
