@@ -81,23 +81,47 @@ def register(request):
             {"form": UserCreationForm, "error": "Las contraseñas no coinciden."},
         )
 
+@csrf_exempt
 def signin_user(request):
     if request.method == "GET":
         form = EmailAuthenticationForm()
         return render(request, "signin.html", {"form": form})
+    
     elif request.method == "POST":
-        form = EmailAuthenticationForm(data=request.POST)
+        # Si la solicitud tiene JSON (Postman o API)
+        if request.content_type == "application/json":
+            try:
+                data = json.loads(request.body)
+                form = EmailAuthenticationForm(data=data)
+            except json.JSONDecodeError:
+                return JsonResponse({"error": "JSON inválido"}, status=400)
+        else:
+            form = EmailAuthenticationForm(data=request.POST)
+
         if form.is_valid():
             user = form.get_user()
             login(request, user)
 
+            if request.content_type == "application/json":
+                return JsonResponse({
+                    "rol": user.rol,
+                    "user": user.username,
+                    "mensaje": "Usuario autenticado correctamente.",
+                    "id_sesion": request.session.session_key
+                })
+
             if user.rol == "bodeguero":
-                return redirect("home_bodeguero") 
+                return redirect("home_bodeguero")
             else:
                 return redirect("home_page")
         else:
+
             error = "Correo o contraseña incorrectos."
-        return render(request, "signin.html", {"form": form, "error": error})
+
+            if request.content_type == "application/json":
+                return JsonResponse({"error": error}, status=401)
+
+            return render(request, "signin.html", {"form": form, "error": error})
 
 @login_required
 def logout_view(request):
@@ -298,7 +322,31 @@ def cart(request):
         cartItems = order["get_cart_items"]
 
     context = {"items": items, "order": order, "cartItems": cartItems}
+
+    if request.headers.get('Accept') == 'application/json':
+        def serialize_item(item):
+            return {
+                "producto_id": item.producto.id,
+                "nombre": item.producto.nombreProducto,
+                "cantidad": item.quantity,
+                "precio_unitario": item.producto.precioProducto,
+                "subtotal": item.quantity * item.producto.precioProducto,
+            }
+
+        items_data = [serialize_item(i) for i in items] if request.user.is_authenticated else []
+
+        data = {
+            "items": items_data,
+            "order": {
+                "Total_carrito": order.get_cart_total if request.user.is_authenticated else 0,
+                "items_carrito": cartItems,
+                "Comprando": getattr(order, 'shipping', False) if request.user.is_authenticated else False,
+            },
+        }
+        return JsonResponse(data, safe=False)
+
     return render(request, "cart.html", context)
+
 
 def checkout(request):
     if request.user.is_authenticated:
@@ -321,12 +369,15 @@ def checkout(request):
 def updateItem(request):
     data = json.loads(request.body)
     productoId = data.get("productoId")
-    action = data.get("action")
+    action = data.get("action").strip()
 
     print("Action:", action)
     print("productoId:", productoId)
 
     user = request.user
+    if not user.is_authenticated:
+        return JsonResponse("Usuario no autenticado", status=401, safe=False)
+    
     producto = Producto.objects.get(id=productoId)
     order = Order.objects.filter(user=user, complete=False).order_by('-date_ordered').first()
     if not order:
@@ -339,13 +390,15 @@ def updateItem(request):
     elif action == "remove":
         if orderItem.quantity > 1:
             orderItem.quantity = orderItem.quantity - 1
+            
     elif action == "delete":
         orderItem.delete()
+        return JsonResponse("Producto eliminado correctamente", safe=False)
     
     if action != "delete":
         orderItem.save()
 
-    return JsonResponse("Item was added", safe=False)
+    return JsonResponse("Producto añadido correctamente", safe=False)
 
 
 # ---- VISTAS DE PAGO TRANSBANK ----
