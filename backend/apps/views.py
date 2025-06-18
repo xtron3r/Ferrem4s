@@ -26,60 +26,86 @@ from .models import *
 from .forms import EmailAuthenticationForm, ProductoForm
 from .serializers import ProductoSerializer, OrderSerializer, OrderItemSerializer, UserSerializer
 
-from rest_framework import viewsets
+from rest_framework import viewsets, status 
 from rest_framework.response import Response
 
 User = get_user_model()
 
 # ---- VISTAS DE AUTENTICACIÓN ----
 
+@csrf_exempt
 def register(request):
     if request.method == "GET":
         return render(request, "register.html", {"form": UserCreationForm})
-    else:
-        if request.POST["registerPassword"] == request.POST["confirmPassword"]:
-            if User.objects.filter(email=request.POST["registerEmail"]).exists():
-                return render(
-                    request,
-                    "register.html",
-                    {
-                        "form": UserCreationForm,
-                        "error": "Ya existe una cuenta con ese correo electrónico.",
-                    },
-                )
 
+    if request.method == "POST":
+        if request.content_type == "application/json":
             try:
-                user = User.objects.create_user(
-                    username=request.POST["registerEmail"],
-                    email=request.POST["registerEmail"],
-                    password=request.POST["registerPassword"],
-                    first_name=request.POST["registerName"],
-                    last_name=request.POST["registerLastName"],
-                    telefono=request.POST["registerPhone"],
-                    rol="usuario"
-                )
-                user.save()
-                login(request, user)
-                if user.rol == "bodeguero":
-                    return redirect("bodeguero_home")
-                else:
-                    return redirect("home_page")
+                data = json.loads(request.body)
+            except json.JSONDecodeError:
+                return JsonResponse({"error": "JSON inválido"}, status=400)
+        else:
+            data = request.POST
 
-            except IntegrityError:
-                return render(
-                    request,
-                    "register.html",
-                    {
-                        "form": UserCreationForm,
-                        "error": "El nombre de usuario ya está en uso.",
-                    },
-                )
+        # Extraer datos
+        email = data.get("registerEmail", "").strip()
+        password = data.get("registerPassword", "").strip()
+        confirm_password = data.get("confirmPassword", "").strip()
+        name = data.get("registerName", "").strip()
+        last_name = data.get("registerLastName", "").strip()
+        phone = data.get("registerPhone", "").strip()
 
-        return render(
-            request,
-            "register.html",
-            {"form": UserCreationForm, "error": "Las contraseñas no coinciden."},
-        )
+        # Validar campos vacíos
+        if not all([email, password, confirm_password, name, last_name, phone]):
+            error_msg = "Todos los campos son obligatorios."
+            if request.content_type == "application/json":
+                return JsonResponse({"error": error_msg}, status=400)
+            return render(request, "register.html", {"form": UserCreationForm, "error": error_msg})
+
+        if password != confirm_password:
+            error_msg = "Las contraseñas no coinciden."
+            if request.content_type == "application/json":
+                return JsonResponse({"error": error_msg}, status=400)
+            return render(request, "register.html", {"form": UserCreationForm, "error": error_msg})
+
+        if User.objects.filter(email=email).exists():
+            error_msg = "Ya existe una cuenta con ese correo electrónico."
+            if request.content_type == "application/json":
+                return JsonResponse({"error": error_msg}, status=400)
+            return render(request, "register.html", {"form": UserCreationForm, "error": error_msg})
+
+        try:
+            user = User.objects.create_user(
+                username=email,
+                email=email,
+                password=password,
+                first_name=name,
+                last_name=last_name
+            )
+
+            user.telefono = phone
+            user.rol = "usuario"
+            user.save()
+
+            login(request, user)
+
+            if request.content_type == "application/json":
+                return JsonResponse({
+                    "mensaje": "Usuario registrado correctamente.",
+                    "usuario": user.username,
+                    "rol": user.rol
+                }, status=201)
+
+            if user.rol == "bodeguero":
+                return redirect("bodeguero_home")
+            else:
+                return redirect("home_page")
+
+        except IntegrityError:
+            error_msg = "El nombre de usuario ya está en uso."
+            if request.content_type == "application/json":
+                return JsonResponse({"error": error_msg}, status=400)
+            return render(request, "register.html", {"form": UserCreationForm, "error": error_msg})
 
 @csrf_exempt
 def signin_user(request):
@@ -707,9 +733,60 @@ class ProductoViewSett(viewsets.ModelViewSet):
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializer
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response({
+            "mensaje": "Producto creado correctamente",
+            "producto": serializer.data
+        }, status=status.HTTP_201_CREATED)
+
+    def destroy(self, request, *args, **kwargs):
+        self.get_object().delete()
+        return Response({"mensaje": "Producto eliminado correctamente"}, status=200)
+    
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)  # Permite PATCH o PUT
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response({
+            "mensaje": "Producto actualizado correctamente",
+            "producto": serializer.data
+        }, status=status.HTTP_200_OK)
+
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response({
+            'mensaje': 'Orden creada correctamente',
+            'orden': serializer.data
+        }, status=status.HTTP_201_CREATED)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response({
+            'mensaje': 'Orden actualizada correctamente',
+            'orden': serializer.data
+        }, status=status.HTTP_200_OK)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response({
+            'mensaje': 'Orden eliminada correctamente'
+        }, status=status.HTTP_204_NO_CONTENT)
 
 class OrderItemViewSet(viewsets.ModelViewSet):
     queryset = OrderItem.objects.all()
